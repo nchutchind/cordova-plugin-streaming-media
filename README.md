@@ -31,10 +31,10 @@ This plugin allows you to stream audio and video in a fullscreen, native player 
   // Play a video with callbacks
   var options = {
     successCallback: function() {
-      console.log(“Video was closed without error.”);
+      console.log("Video was closed without error.");
     },
     errorCallback: function(errMsg) {
-      console.log(“Error! “ + errMsg);
+      console.log("Error! " + errMsg);
     }
   };
   window.plugins.streamingMedia.playVideo(videoUrl, options);
@@ -47,14 +47,14 @@ This plugin allows you to stream audio and video in a fullscreen, native player 
 
   // Play an audio file with options (all options optional)
   var options = {
-    bgColor: “#FFFFFF”,
-    bgImage: “<SWEET_BACKGROUND_IMAGE>”,
-    bgImageScale: “fit”,
+    bgColor: "#FFFFFF",
+    bgImage: "<SWEET_BACKGROUND_IMAGE>",
+    bgImageScale: "fit",
     successCallback: function() {
-      console.log(“Player closed without error.”);
+      console.log("Player closed without error.");
     },
     errorCallback: function(errMsg) {
-      console.log(“Error! “ + errMsg);
+      console.log("Error! " + errMsg);
     }
   };
   window.plugins.streamingMedia.playAudio(audioUrl, options);
