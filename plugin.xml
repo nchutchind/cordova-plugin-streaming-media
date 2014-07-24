@@ -3,7 +3,7 @@
 		xmlns="http://apache.org/cordova/ns/plugins/1.0"
 		xmlns:android="http://schemas.android.com/apk/res/android"
 		id="com.hutchind.cordova.plugins.streamingmedia"
-		version=“0.1.0”>
+		version="0.1.0">
 
 	<name>StreamingMedia</name>
 
@@ -32,13 +32,13 @@
 	<!-- ios -->
 	<platform name="ios">
 		<config-file target="config.xml" parent="/*">
-			<feature name=“StreamingMedia”>
-				<param name="ios-package" value=“StreamingMedia" />
+			<feature name="StreamingMedia">
+				<param name="ios-package" value="StreamingMedia" />
 			</feature>
 		</config-file>
-		<header-file src="src/ios/StreamingMedia.h” />
-		<source-file src="src/ios/StreamingMedia.m” />
-		<framework src=“MediaPlayer.framework" />
+		<header-file src="src/ios/StreamingMedia.h" />
+		<source-file src="src/ios/StreamingMedia.m" />
+		<framework src="MediaPlayer.framework" />
 	</platform>
 
 	<!-- android -->
