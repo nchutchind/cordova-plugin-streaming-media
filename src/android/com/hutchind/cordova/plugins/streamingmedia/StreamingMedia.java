@@ -61,20 +61,27 @@ public class StreamingMedia extends CordovaPlugin {
 		cordova.getActivity().runOnUiThread(new Runnable() {
 			public void run() {
 				final Intent streamIntent = new Intent(cordovaObj.getActivity().getApplicationContext(), activityClass);
-				streamIntent.putExtra("mediaUrl", url);
+				Bundle extras = new Bundle();
+				extras.putString("mediaUrl", url);
 
 				if (options != null) {
 					Iterator<String> optKeys = options.keys();
 					while (optKeys.hasNext()) {
 						try {
 							final String optKey = (String)optKeys.next();
-							final String optValue = (String)options.get(optKey);
-							streamIntent.putExtra(optKey, optValue);
-							Log.v(TAG, "Added option: " + optKey + " -> " + optValue);
+							if (options.get(optKey).getClass().equals(String.class)) {
+								extras.putString(optKey, (String)options.get(optKey));
+								Log.v(TAG, "Added option: " + optKey + " -> " + String.valueOf(options.get(optKey)));
+							} else if (options.get(optKey).getClass().equals(Boolean.class)) {
+								extras.putBoolean("shouldAutoClose", true);
+								Log.v(TAG, "Added option: " + optKey + " -> " + String.valueOf(options.get(optKey)));
+							}
+
 						} catch (JSONException e) {
 							Log.e(TAG, "JSONException while trying to read options. Skipping option.");
 						}
 					}
+					streamIntent.putExtras(extras);
 				}
 
 				cordovaObj.startActivityForResult(plugin, streamIntent, ACTIVITY_CODE_PLAY_MEDIA);
