@@ -162,7 +162,7 @@ public class SimpleAudioStream extends Activity implements
 	public boolean isPlaying() {
 		if (mMediaPlayer!=null) {
 			try {
-				return mMediaPlayer.isPlaying()
+				return mMediaPlayer.isPlaying();
 			} catch (Exception e) {
 				Log.d(TAG, e.toString());
 			}
