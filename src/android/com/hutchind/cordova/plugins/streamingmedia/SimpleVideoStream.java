@@ -45,7 +45,9 @@ public class SimpleVideoStream extends Activity implements
 		RelativeLayout relLayout = new RelativeLayout(this);
 		relLayout.setBackgroundColor(Color.BLACK);
 		RelativeLayout.LayoutParams relLayoutParam = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+		relLayoutParam.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
 		mVideoView = new VideoView(this);
+		mVideoView.setLayoutParams(relLayoutParam);
 		relLayout.addView(mVideoView);
 
 		// Create progress throbber
@@ -81,14 +83,29 @@ public class SimpleVideoStream extends Activity implements
 		}
 	}
 
+	private Runnable checkIfPlaying = new Runnable() {
+		@Override
+		public void run() {
+			if (mVideoView.getCurrentPosition() > 0) {
+				// Video is not at the very beginning anymore.
+				// Hide the progress bar.
+				mProgressBar.setVisibility(View.GONE);
+			} else {
+				// Video is still at the very beginning.
+				// Check again after a small amount of time.
+				mVideoView.postDelayed(checkIfPlaying, 100);
+			}
+		}
+	};
+
 	@Override
 	public void onPrepared(MediaPlayer mp) {
 		Log.d(TAG, "Stream is prepared");
 		mMediaPlayer = mp;
 		mMediaPlayer.setOnBufferingUpdateListener(this);
-		resizeKeepAspectRatio();
-		mProgressBar.setVisibility(View.GONE);
+		mVideoView.requestFocus();
 		mVideoView.start();
+		mVideoView.postDelayed(checkIfPlaying, 0);
 	}
 
 	private void pause() {
@@ -157,38 +174,10 @@ public class SimpleVideoStream extends Activity implements
 		wrapItUp(RESULT_OK, null);
 	}
 
-	private void resizeKeepAspectRatio() {
-		// Make the video fullscreen, but retain aspect ratio
-		if (mMediaPlayer != null) {
-			int videoWidth = mMediaPlayer.getVideoWidth();
-			int videoHeight = mMediaPlayer.getVideoHeight();
-			float videoProportion = (float) videoWidth / (float) videoHeight;
-			// Get screen size
-			Display display = getWindowManager().getDefaultDisplay();
-			Point size = new Point();
-			display.getSize(size);
-			int screenWidth = size.x;
-			int screenHeight = size.y;
-			float screenProportion = (float) screenWidth / (float) screenHeight;
-
-			RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
-			lp.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
-			if (videoProportion > screenProportion) {
-				lp.width = screenWidth;
-				lp.height = (int) ((float) screenWidth / videoProportion);
-			} else {
-				lp.width = (int) (videoProportion * (float) screenHeight);
-				lp.height = screenHeight;
-			}
-			mVideoView.setLayoutParams(lp);
-		}
-	}
-
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
-		// The screen size changed or the orientation changed... resize the video
+		// The screen size changed or the orientation changed... don't restart the activity
 		super.onConfigurationChanged(newConfig);
-		resizeKeepAspectRatio();
 	}
 
 	@Override
@@ -197,5 +186,4 @@ public class SimpleVideoStream extends Activity implements
 			mMediaController.show();
 		return false;
 	}
-
 }
