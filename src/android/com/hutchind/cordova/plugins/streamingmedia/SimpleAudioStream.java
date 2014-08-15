@@ -84,8 +84,12 @@ public class SimpleAudioStream extends Activity implements
 			if (mMediaPlayer == null) {
 				mMediaPlayer = new MediaPlayer();
 			} else {
-				mMediaPlayer.stop();
-				mMediaPlayer.reset();
+				try {
+					mMediaPlayer.stop();
+					mMediaPlayer.reset();
+				} catch (Exception e) {
+					Log.e(TAG, e.toString());
+				}
 			}
 			mMediaPlayer.setDataSource(this, myUri); // Go to Initialized state
 			mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -94,7 +98,6 @@ public class SimpleAudioStream extends Activity implements
 			mMediaPlayer.setOnBufferingUpdateListener(this);
 			mMediaPlayer.setOnErrorListener(this);
 			mMediaController = new MediaController(this);
-
 
 			mMediaPlayer.prepareAsync();
 
@@ -112,7 +115,6 @@ public class SimpleAudioStream extends Activity implements
 		mMediaPlayer.start();
 		mMediaController.setEnabled(true);
 		mMediaController.show();
-		Log.v(TAG, "Prepared");
 	}
 
 	@Override
@@ -125,13 +127,21 @@ public class SimpleAudioStream extends Activity implements
 	@Override
 	public void pause() {
 		if (mMediaPlayer!=null) {
-			mMediaPlayer.pause();
+			try {
+				mMediaPlayer.pause();
+			} catch (Exception e) {
+				Log.d(TAG, e.toString());
+			}
 		}
 	}
 
 	private void stop() {
 		if (mMediaPlayer!=null) {
-			mMediaPlayer.stop();
+			try {
+				mMediaPlayer.stop();
+			} catch (Exception e) {
+				Log.d(TAG, e.toString());
+			}
 		}
 	}
 
@@ -150,7 +160,14 @@ public class SimpleAudioStream extends Activity implements
 	}
 
 	public boolean isPlaying() {
-		return (mMediaPlayer!=null) ? mMediaPlayer.isPlaying() : false;
+		if (mMediaPlayer!=null) {
+			try {
+				return mMediaPlayer.isPlaying()
+			} catch (Exception e) {
+				Log.d(TAG, e.toString());
+			}
+		}
+		return false;
 	}
 
 	public int getBufferPercentage() {
@@ -178,7 +195,12 @@ public class SimpleAudioStream extends Activity implements
 	public void onDestroy() {
 		super.onDestroy();
 		if (mMediaPlayer!=null){
-			mMediaPlayer.release();
+			try {
+				mMediaPlayer.reset();
+				mMediaPlayer.release();
+			} catch (Exception e) {
+				Log.e(TAG, e.toString());
+			}
 			mMediaPlayer = null;
 		}
 	}
@@ -244,8 +266,13 @@ public class SimpleAudioStream extends Activity implements
 	protected void onStop() {
 		super.onStop();
 		mMediaController.hide();
-		mMediaPlayer.stop();
-		mMediaPlayer.release();
+		try {
+			mMediaPlayer.stop();
+			mMediaPlayer.reset();
+			mMediaPlayer.release();
+		} catch(Exception e) {
+			Log.e(TAG, e.toString());
+		}
 	}
 
 	@Override
