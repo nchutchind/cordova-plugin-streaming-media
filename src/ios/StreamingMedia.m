@@ -248,6 +248,7 @@ NSString * const DEFAULT_IMAGE_SCALE = @"center";
 									object:nil];
 
 	if (moviePlayer) {
+		moviePlayer.fullscreen = NO;
 		[moviePlayer setInitialPlaybackTime:-1];
 		[moviePlayer stop];
 		moviePlayer.controlStyle = MPMovieControlStyleNone;
