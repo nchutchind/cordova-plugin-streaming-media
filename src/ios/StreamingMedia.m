@@ -18,6 +18,7 @@
 	BOOL shouldAutoClose;
 	UIColor *backgroundColor;
 	UIImageView *imageView;
+	NSTimeInterval _initialPlaybackTime;
 }
 
 NSString * const TYPE_VIDEO = @"VIDEO";
@@ -33,15 +34,35 @@ NSString * const DEFAULT_IMAGE_SCALE = @"center";
 
 -(void)parseOptions:(NSDictionary *)options type:(NSString *) type {
 	// Common options
-	if (![options isKindOfClass:[NSNull class]] && [options objectForKey:@"shouldAutoClose"]) {
-		shouldAutoClose = [[options objectForKey:@"shouldAutoClose"] boolValue];
-	} else {
-		shouldAutoClose = true;
-	}
-	if (![options isKindOfClass:[NSNull class]] && [options objectForKey:@"bgColor"]) {
-		[self setBackgroundColor:[options objectForKey:@"bgColor"]];
-	} else {
-		backgroundColor = [UIColor blackColor];
+	if ([options isKindOfClass:NSDictionary.class]) {
+		// shouldAutoClose
+		NSNumber *optShouldAutoClose = options[@"shouldAutoClose"];
+		if (optShouldAutoClose) {
+			shouldAutoClose = optShouldAutoClose.boolValue;
+		}
+		else {
+			shouldAutoClose = YES;
+		}
+
+		// bgColor
+		NSString *optBgColor = options[@"bgColor"];
+		if (optBgColor) {
+			[self setBackgroundColor:optBgColor];
+		}
+		else {
+			backgroundColor = [UIColor blackColor];
+		}
+
+
+		// playbackPosition
+		NSNumber *playbackPosition = options[@"playbackPosition"];
+
+		if (!playbackPosition) {
+			playbackPosition = @0;
+		}
+
+		_initialPlaybackTime = playbackPosition.doubleValue;
+
 	}
 
 	if ([type isEqualToString:TYPE_AUDIO]) {
@@ -67,8 +88,8 @@ NSString * const DEFAULT_IMAGE_SCALE = @"center";
 
 -(void)play:(CDVInvokedUrlCommand *) command type:(NSString *) type {
 	callbackId = command.callbackId;
-	NSString *mediaUrl  = [command.arguments objectAtIndex:0];
-	[self parseOptions:[command.arguments objectAtIndex:1] type:type];
+	NSString *mediaUrl  = command.arguments[0];
+	[self parseOptions:command.arguments[1] type:type];
 
 	[self startPlayer:mediaUrl];
 }
@@ -186,7 +207,10 @@ NSString * const DEFAULT_IMAGE_SCALE = @"center";
 		[moviePlayer.backgroundView addSubview:imageView];
 	}
 	moviePlayer.backgroundView.backgroundColor = backgroundColor;
+	moviePlayer.initialPlaybackTime = _initialPlaybackTime;
+
 	[self.viewController.view addSubview:moviePlayer.view];
+
 
 	// Note: animating does a fade to black, which may not match background color
 	[moviePlayer setFullscreen:YES animated:NO];
@@ -207,23 +231,35 @@ NSString * const DEFAULT_IMAGE_SCALE = @"center";
 		NSLog(@"Playback failed: %@", errorMsg);
 	}
 
+	NSTimeInterval endPosition = [self endPosition];
+
 	if (shouldAutoClose || [errorMsg length] != 0) {
 		[self cleanup];
 		CDVPluginResult* pluginResult;
 		if ([errorMsg length] != 0) {
-			pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:errorMsg];
+			pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR
+										 messageAsDictionary:@{@"success":@(NO), @"errorMessage": errorMsg, @"endPosition":@(endPosition)}];
 		} else {
-			pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:true];
+			pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
+										 messageAsDictionary:@{@"success":@(YES), @"endPosition":@(endPosition)}];
 		}
 		[self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
 	}
 }
 
 -(void)doneButtonClick:(NSNotification*)notification{
+	NSTimeInterval endPosition = [self endPosition];
+
 	[self cleanup];
 
-	CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:true];
+	CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
+												  messageAsDictionary:@{@"success":@(YES), @"endPosition":@(endPosition)}];
 	[self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
+}
+
+- (NSTimeInterval)endPosition
+{
+	return (moviePlayer) ? moviePlayer.currentPlaybackTime : 0.0;
 }
 
 - (void)cleanup {
