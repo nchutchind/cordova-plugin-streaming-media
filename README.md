@@ -3,7 +3,7 @@
 for iOS and Android, by [Nicholas Hutchind](https://github.com/nchutchind)
 
 1. [Description](https://github.com/nchutchind/Streaming-Media-Cordova-Plugin#1-description)
-2. [Usage](https://github.com/nchutchind/Streaming-Media-Cordova-Plugin#3-usage)
+2. [Usage](https://github.com/nchutchind/Streaming-Media-Cordova-Plugin#2-usage)
 
 ## 1. Description
 
