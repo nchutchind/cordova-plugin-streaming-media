@@ -49,7 +49,7 @@ This plugin allows you to stream audio and video in a fullscreen, native player 
   var options = {
     bgColor: "#FFFFFF",
     bgImage: "<SWEET_BACKGROUND_IMAGE>",
-    bgImageScale: "fit",
+    bgImageScale: "fit", // other valid values: "stretch"
     successCallback: function() {
       console.log("Player closed without error.");
     },
