@@ -18,6 +18,7 @@
 	BOOL shouldAutoClose;
 	UIColor *backgroundColor;
 	UIImageView *imageView;
+    BOOL *initFullscreen;
 }
 
 NSString * const TYPE_VIDEO = @"VIDEO";
@@ -43,6 +44,12 @@ NSString * const DEFAULT_IMAGE_SCALE = @"center";
 	} else {
 		backgroundColor = [UIColor blackColor];
 	}
+
+    if (![options isKindOfClass:[NSNull class]] && [options objectForKey:@"initFullscreen"]) {
+        initFullscreen = [[options objectForKey:@"initFullscreen"] boolValue];
+    } else {
+        initFullscreen = true;
+    }
 
 	if ([type isEqualToString:TYPE_AUDIO]) {
 		// bgImage
@@ -189,7 +196,11 @@ NSString * const DEFAULT_IMAGE_SCALE = @"center";
 	[self.viewController.view addSubview:moviePlayer.view];
 
 	// Note: animating does a fade to black, which may not match background color
-	[moviePlayer setFullscreen:YES animated:NO];
+    if (initFullscreen) {
+        [moviePlayer setFullscreen:YES animated:NO];
+    } else {
+        [moviePlayer setFullscreen:NO animated:NO];
+    }
 }
 
 - (void) moviePlayBackDidFinish:(NSNotification*)notification {
@@ -229,6 +240,7 @@ NSString * const DEFAULT_IMAGE_SCALE = @"center";
 - (void)cleanup {
 	NSLog(@"Clean up");
 	imageView = nil;
+    initFullscreen = false;
 	backgroundColor = nil;
 
 	// Remove Done Button listener
