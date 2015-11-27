@@ -80,12 +80,23 @@ NSString * const DEFAULT_IMAGE_SCALE = @"center";
 	[self startPlayer:mediaUrl];
 }
 
+-(void)stop:(CDVInvokedUrlCommand *) command type:(NSString *) type {
+    callbackId = command.callbackId;
+    if (moviePlayer) {
+        [moviePlayer stop];
+    }
+}
+
 -(void)playVideo:(CDVInvokedUrlCommand *) command {
 	[self play:command type:[NSString stringWithString:TYPE_VIDEO]];
 }
 
 -(void)playAudio:(CDVInvokedUrlCommand *) command {
 	[self play:command type:[NSString stringWithString:TYPE_AUDIO]];
+}
+
+-(void)stopAudio:(CDVInvokedUrlCommand *) command {
+    [self stop:command type:[NSString stringWithString:TYPE_AUDIO]];
 }
 
 -(void) setBackgroundColor:(NSString *)color {

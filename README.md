@@ -59,4 +59,9 @@ This plugin allows you to stream audio and video in a fullscreen, native player 
     }
   };
   window.plugins.streamingMedia.playAudio(audioUrl, options);
+
+
+  // Stop current audio
+  window.plugins.streamingMedia.stopAudio();
+
 ```
