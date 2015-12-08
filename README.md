@@ -50,6 +50,7 @@ This plugin allows you to stream audio and video in a fullscreen, native player 
     bgColor: "#FFFFFF",
     bgImage: "<SWEET_BACKGROUND_IMAGE>",
     bgImageScale: "fit",
+    initFullscreen: false, // true(default)/false iOS only
     successCallback: function() {
       console.log("Player closed without error.");
     },
@@ -58,4 +59,9 @@ This plugin allows you to stream audio and video in a fullscreen, native player 
     }
   };
   window.plugins.streamingMedia.playAudio(audioUrl, options);
+
+
+  // Stop current audio
+  window.plugins.streamingMedia.stopAudio();
+
 ```
