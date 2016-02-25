@@ -7,6 +7,7 @@ import android.graphics.Point;
 import android.media.MediaPlayer;
 import android.widget.MediaController;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.view.MotionEvent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -61,6 +62,8 @@ public class SimpleVideoStream extends Activity implements
 		relLayout.addView(mProgressBar);
 		mProgressBar.bringToFront();
 
+		setOrientation(b.getString("orientation"));
+
 		setContentView(relLayout, relLayoutParam);
 
 		play();
@@ -80,6 +83,14 @@ public class SimpleVideoStream extends Activity implements
 			mVideoView.setMediaController(mMediaController);
 		} catch (Throwable t) {
 			Log.d(TAG, t.toString());
+		}
+	}
+
+	private void setOrientation(String orientation) {
+		if ("landscape".equals(orientation)) {
+			this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+		}else if("portrait".equals(orientation)) {
+			this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		}
 	}
 

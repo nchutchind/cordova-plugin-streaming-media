@@ -1,4 +1,4 @@
-# Cordova Streaming Media plugin 
+# Cordova Streaming Media plugin
 
 for iOS and Android, by [Nicholas Hutchind](https://github.com/nchutchind)
 
@@ -27,7 +27,7 @@ This plugin allows you to stream audio and video in a fullscreen, native player 
 
   // Just play a video
   window.plugins.streamingMedia.playVideo(videoUrl);
-  
+
   // Play a video with callbacks
   var options = {
     successCallback: function() {
@@ -35,13 +35,14 @@ This plugin allows you to stream audio and video in a fullscreen, native player 
     },
     errorCallback: function(errMsg) {
       console.log("Error! " + errMsg);
-    }
+    },
+    orientation: 'landscape'
   };
   window.plugins.streamingMedia.playVideo(videoUrl, options);
 
 
   var audioUrl = STREAMING_AUDIO_URL;
-  
+
   // Play an audio file (not recommended, since the screen will be plain black)
   window.plugins.streamingMedia.playAudio(audioUrl);
 
