@@ -1,3 +1,6 @@
+#Status of Plugin: Unmaintained
+I developed this plugin while working on a project that needed streaming media. A year ago, I left that job and have not had a need (or the time) to revisit this plugin, which is why there have been no updates. I would love to see someone fork this repo and build it up into something that the community can continue to use, but I just do not have the ability to do that myself now.
+
 # Cordova Streaming Media plugin 
 
 for iOS and Android, by [Nicholas Hutchind](https://github.com/nchutchind)
