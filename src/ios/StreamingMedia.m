@@ -25,12 +25,13 @@ NSString * const TYPE_VIDEO = @"VIDEO";
 NSString * const TYPE_AUDIO = @"AUDIO";
 NSString * const DEFAULT_IMAGE_SCALE = @"center";
 
+/*
 - (CDVPlugin*) initWithWebView:(UIWebView*)theWebView {
 	NSLog(@"-------------------------------------------------");
 	NSLog(@"INITWITHWEBVIEW");
 	self = (StreamingMedia*)[super initWithWebView:theWebView];
 	return self;
-}
+}*/
 
 -(void)parseOptions:(NSDictionary *)options type:(NSString *) type {
 	// Common options
