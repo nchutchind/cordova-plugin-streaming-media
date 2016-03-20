@@ -39,7 +39,8 @@ cordova plugin add cordova-plugin-streaming-media
     },
     errorCallback: function(errMsg) {
       console.log("Error! " + errMsg);
-    }
+    },
+    orientation: 'landscape'
   };
   window.plugins.streamingMedia.playVideo(videoUrl, options);
 
