@@ -11,11 +11,11 @@
     "url": "git+https://github.com/nchutchind/Streaming-Media-Cordova-Plugin.git"
   },
   "keywords": [
-    "media",
-    "streaming",
-    "ios",
-    "android",
-    "cordova"
+    "ecosystem:cordova",
+    "cordova:android",
+    "cordova:ios",
+    "cordova:media",
+    "cordova:streaming"
   ],
   "author": "Nicholas Hutchind",
   "license": "MIT",
