@@ -1,6 +1,6 @@
 # Cordova Streaming Media plugin
 
-for iOS and Android, by [Nicholas Hutchind](https://github.com/nchutchind)
+For iOS and Android, by [Nicholas Hutchind](https://github.com/nchutchind)
 
 ## Description
 
@@ -17,12 +17,12 @@ cordova plugin add cordova-plugin-streaming-media
 
 ### iOS specifics
 * Uses the MPMoviePlayerController.
-* Tested on iOS 7. (If someone has an iOS 6 device, please report back to me how it does.)
+* Tested on iOS 7, 9
 
 ### Android specifics
 * Uses VideoView and MediaPlayer.
 * Creates two activities in your AndroidManifest.xml file.
-* Tested on Android 4.0+. (If someone has a Gingerbread device, please report back to me how it does.)
+* Tested on Android 4.0+
 
 ## Usage
 
