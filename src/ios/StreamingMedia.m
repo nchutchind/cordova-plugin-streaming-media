@@ -107,7 +107,7 @@ NSString * const DEFAULT_IMAGE_SCALE = @"center";
 }
 
 -(void)resumeAudio:(CDVInvokedUrlCommand *) command {
-    [self pause:command type:[NSString stringWithString:TYPE_AUDIO]];
+    [self resume:command type:[NSString stringWithString:TYPE_AUDIO]];
 }
 
 -(void)stopAudio:(CDVInvokedUrlCommand *) command {
