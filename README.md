@@ -68,6 +68,9 @@ cordova plugin add cordova-plugin-streaming-media
   // Pause current audio
   window.plugins.streamingMedia.pauseAudio();
 
+  // Resume current audio
+  window.plugins.streamingMedia.resumeAudio();
+
   // Stop current audio
   window.plugins.streamingMedia.stopAudio();
 

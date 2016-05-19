@@ -80,6 +80,13 @@ NSString * const DEFAULT_IMAGE_SCALE = @"center";
     }
 }
 
+-(void)resume:(CDVInvokedUrlCommand *) command type:(NSString *) type {
+    callbackId = command.callbackId;
+    if (moviePlayer) {
+        [moviePlayer play];
+    }
+}
+
 -(void)stop:(CDVInvokedUrlCommand *) command type:(NSString *) type {
     callbackId = command.callbackId;
     if (moviePlayer) {
@@ -96,6 +103,10 @@ NSString * const DEFAULT_IMAGE_SCALE = @"center";
 }
 
 -(void)pauseAudio:(CDVInvokedUrlCommand *) command {
+    [self pause:command type:[NSString stringWithString:TYPE_AUDIO]];
+}
+
+-(void)resumeAudio:(CDVInvokedUrlCommand *) command {
     [self pause:command type:[NSString stringWithString:TYPE_AUDIO]];
 }
 

@@ -12,6 +12,11 @@ StreamingMedia.prototype.pauseAudio = function (options) {
     cordova.exec(options.successCallback || null, options.errorCallback || null, "StreamingMedia", "pauseAudio", [options]);
 };
 
+StreamingMedia.prototype.resumeAudio = function (options) {
+    options = options || {};
+    cordova.exec(options.successCallback || null, options.errorCallback || null, "StreamingMedia", "resumeAudio", [options]);
+};
+
 StreamingMedia.prototype.stopAudio = function (options) {
     options = options || {};
     cordova.exec(options.successCallback || null, options.errorCallback || null, "StreamingMedia", "stopAudio", [options]);
