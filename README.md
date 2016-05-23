@@ -65,13 +65,15 @@ cordova plugin add cordova-plugin-streaming-media
   };
   window.plugins.streamingMedia.playAudio(audioUrl, options);
 
-  // Pause current audio
-  window.plugins.streamingMedia.pauseAudio();
-
-  // Resume current audio
-  window.plugins.streamingMedia.resumeAudio();
-
   // Stop current audio
   window.plugins.streamingMedia.stopAudio();
+
+  // Pause current audio (iOS only)
+  window.plugins.streamingMedia.pauseAudio();
+
+  // Resume current audio (iOS only)
+  window.plugins.streamingMedia.resumeAudio();
+
+  
 
 ```
