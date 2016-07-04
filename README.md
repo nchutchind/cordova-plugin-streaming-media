@@ -34,6 +34,7 @@ cordova plugin add cordova-plugin-streaming-media
 
   // Play a video with callbacks
   var options = {
+    bgColor: "#FFFFFF",
     successCallback: function() {
       console.log("Video was closed without error.");
     },
