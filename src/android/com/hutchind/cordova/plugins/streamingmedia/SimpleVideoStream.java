@@ -30,6 +30,7 @@ public class SimpleVideoStream extends Activity implements
 	private MediaController mMediaController = null;
 	private ProgressBar mProgressBar = null;
 	private String mVideoUrl;
+	private String nextVideoUrl;
 	private Boolean mShouldAutoClose = true;
 
 	@Override
@@ -40,6 +41,7 @@ public class SimpleVideoStream extends Activity implements
 
 		Bundle b = getIntent().getExtras();
 		mVideoUrl = b.getString("mediaUrl");
+		nextVideoUrl = b.getString("nextVideoUrl");
 		mShouldAutoClose = b.getBoolean("shouldAutoClose");
 		mShouldAutoClose = mShouldAutoClose == null ? true : mShouldAutoClose;
 
@@ -67,12 +69,12 @@ public class SimpleVideoStream extends Activity implements
 
 		setContentView(relLayout, relLayoutParam);
 
-		play();
+		play(mVideoUrl);
 	}
 
-	private void play() {
+	private void play(String url) {
 		mProgressBar.setVisibility(View.VISIBLE);
-		Uri videoUri = Uri.parse(mVideoUrl);
+		Uri videoUri = Uri.parse(url);
 		try {
 			mVideoView.setOnCompletionListener(this);
 			mVideoView.setOnPreparedListener(this);
@@ -146,6 +148,9 @@ public class SimpleVideoStream extends Activity implements
 	public void onCompletion(MediaPlayer mp) {
 		stop();
 		if (mShouldAutoClose) {
+			//wrapItUp(RESULT_OK, null);
+			this.play(nextVideoUrl);
+		}else{
 			wrapItUp(RESULT_OK, null);
 		}
 	}
