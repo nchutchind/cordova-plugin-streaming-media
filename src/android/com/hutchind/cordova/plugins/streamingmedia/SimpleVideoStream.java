@@ -45,7 +45,7 @@ public class SimpleVideoStream extends Activity implements
 
 		RelativeLayout relLayout = new RelativeLayout(this);
 		String backgroundColor = b.getString("bgColor");
-		relLayout.setBackgroundColor(backgroundColor);
+		relLayout.setBackgroundColor(Color.parseColor(backgroundColor));
 		RelativeLayout.LayoutParams relLayoutParam = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
 		relLayoutParam.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
 		mVideoView = new VideoView(this);
