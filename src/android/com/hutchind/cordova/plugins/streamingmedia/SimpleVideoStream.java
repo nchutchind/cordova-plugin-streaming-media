@@ -44,7 +44,8 @@ public class SimpleVideoStream extends Activity implements
 		mShouldAutoClose = mShouldAutoClose == null ? true : mShouldAutoClose;
 
 		RelativeLayout relLayout = new RelativeLayout(this);
-		relLayout.setBackgroundColor(Color.BLACK);
+		String backgroundColor = b.getString("bgColor");
+		relLayout.setBackgroundColor(backgroundColor);
 		RelativeLayout.LayoutParams relLayoutParam = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
 		relLayoutParam.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
 		mVideoView = new VideoView(this);
