@@ -55,15 +55,15 @@ public class SimpleVideoStream extends Activity implements
 		mVideoView.setLayoutParams(relLayoutParam);
 		relLayout.addView(mVideoView);
 
-		Button myButton = new Button(this);
-		myButton.setId(3);
-		android.widget.RelativeLayout.LayoutParams buttonParams =
-   		new android.widget.RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
-     	RelativeLayout.LayoutParams.WRAP_CONTENT);
-		buttonParams.addRule(RelativeLayout.CENTER_IN_PARENT);
-		myButton.setLayoutParams(buttonParams);
-		myButton.setText("My Button!");
-		relLayout.addView(myButton);
+		// Button myButton = new Button(this);
+		// myButton.setId(3);
+		// android.widget.RelativeLayout.LayoutParams buttonParams =
+  //  		new android.widget.RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
+  //    	RelativeLayout.LayoutParams.WRAP_CONTENT);
+		// buttonParams.addRule(RelativeLayout.CENTER_IN_PARENT);
+		// myButton.setLayoutParams(buttonParams);
+		// myButton.setText("My Button!");
+		// relLayout.addView(myButton);
 
 		// Create progress throbber
 		mProgressBar = new ProgressBar(this);
@@ -159,10 +159,8 @@ public class SimpleVideoStream extends Activity implements
 	public void onCompletion(MediaPlayer mp) {
 		stop();
 		if (mShouldAutoClose) {
-			//wrapItUp(RESULT_OK, null);
-			this.play(nextVideoUrl);
-		}else{
-			wrapItUp(RESULT_OK, null);
+			wrapItUp(RESULT_OK, "completion");
+			//this.play(nextVideoUrl);
 		}
 	}
 
