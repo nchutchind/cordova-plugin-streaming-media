@@ -40,7 +40,7 @@ public class StreamingMedia extends CordovaPlugin {
 		}
 
 		if (ACTION_PLAY_AUDIO.equals(action)) {
-			return playAudio(args.getString(0), options,playList);
+			return playAudio(args.getString(0), options);
 		} else if (ACTION_PLAY_VIDEO.equals(action)) {
 			return playVideo(args.getString(0), options,playList);
 		} else {
@@ -50,13 +50,13 @@ public class StreamingMedia extends CordovaPlugin {
 	}
 
 	private boolean playAudio(String url, JSONObject options) {
-		return play(SimpleAudioStream.class, url, options,playList);
+		return play(SimpleAudioStream.class, url, options,null);
 	}
 	private boolean playVideo(String url, JSONObject options) {
 		return play(SimpleVideoStream.class, url, options,playList);
 	}
 
-	private boolean play(final Class activityClass, final String url, final JSONObject options) {
+	private boolean play(final Class activityClass, final String url, final JSONObject options,final JSONObject playList) {
 		final CordovaInterface cordovaObj = cordova;
 		final CordovaPlugin plugin = this;
 
@@ -83,9 +83,9 @@ public class StreamingMedia extends CordovaPlugin {
 							Log.e(TAG, "JSONException while trying to read options. Skipping option.");
 						}
 					}
-					streamIntent.putExtras(extras);
+					
 				}
-
+				streamIntent.putExtras(extras);
 				cordovaObj.startActivityForResult(plugin, streamIntent, ACTIVITY_CODE_PLAY_MEDIA);
 			}
 		});
