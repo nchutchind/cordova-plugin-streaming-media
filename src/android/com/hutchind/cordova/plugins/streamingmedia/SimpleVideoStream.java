@@ -58,8 +58,8 @@ public class SimpleVideoStream extends Activity implements
 		Button myButton = new Button(this);
 		myButton.setId(3);
 		android.widget.RelativeLayout.LayoutParams buttonParams =
-   		new android.widget.RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-     	ViewGroup.LayoutParams.WRAP_CONTENT);
+   		new android.widget.RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
+     	RelativeLayout.LayoutParams.WRAP_CONTENT);
 		buttonParams.addRule(RelativeLayout.CENTER_IN_PARENT);
 		myButton.setLayoutParams(buttonParams);
 		myButton.setText("My Button!");
