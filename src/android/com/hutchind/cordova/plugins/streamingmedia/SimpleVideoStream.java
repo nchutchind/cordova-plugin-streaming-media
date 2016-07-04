@@ -20,6 +20,7 @@ import android.widget.MediaController;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.VideoView;
+import android.widget.Button;
 
 public class SimpleVideoStream extends Activity implements
 	MediaPlayer.OnCompletionListener, MediaPlayer.OnPreparedListener,
@@ -53,6 +54,16 @@ public class SimpleVideoStream extends Activity implements
 		mVideoView = new VideoView(this);
 		mVideoView.setLayoutParams(relLayoutParam);
 		relLayout.addView(mVideoView);
+
+		Button myButton = new Button(this);
+		myButton.setId(3);
+		android.widget.RelativeLayout.LayoutParams buttonParams =
+   		new android.widget.RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+     	ViewGroup.LayoutParams.WRAP_CONTENT);
+		buttonParams.addRule(RelativeLayout.CENTER_IN_PARENT);
+		myButton.setLayoutParams(buttonParams);
+		myButton.setText("My Button!");
+		relLayout.addView(myButton);
 
 		// Create progress throbber
 		mProgressBar = new ProgressBar(this);
