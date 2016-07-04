@@ -52,7 +52,7 @@ public class StreamingMedia extends CordovaPlugin {
 	private boolean playAudio(String url, JSONObject options) {
 		return play(SimpleAudioStream.class, url, options,null);
 	}
-	private boolean playVideo(String url, JSONObject options) {
+	private boolean playVideo(String url, JSONObject options,JSONObject playList) {
 		return play(SimpleVideoStream.class, url, options,playList);
 	}
 
