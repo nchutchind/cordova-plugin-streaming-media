@@ -33,6 +33,8 @@ public class SimpleVideoStream extends Activity implements
 	private String mVideoUrl;
 	private String nextVideoUrl;
 	private Boolean mShouldAutoClose = true;
+	private int videoCount = 0;
+	private int playlistCount = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

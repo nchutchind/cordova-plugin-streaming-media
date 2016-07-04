@@ -30,17 +30,19 @@ public class StreamingMedia extends CordovaPlugin {
 	public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
 		this.callbackContext = callbackContext;
 		JSONObject options = null;
+		JSONObject playList = null;
 
 		try {
 			options = args.getJSONObject(1);
+			playList =  args.getJSONObject(2);
 		} catch (JSONException e) {
 			// Developer provided no options. Leave options null.
 		}
 
 		if (ACTION_PLAY_AUDIO.equals(action)) {
-			return playAudio(args.getString(0), options);
+			return playAudio(args.getString(0), options,playList);
 		} else if (ACTION_PLAY_VIDEO.equals(action)) {
-			return playVideo(args.getString(0), options);
+			return playVideo(args.getString(0), options,playList);
 		} else {
 			callbackContext.error("streamingMedia." + action + " is not a supported method.");
 			return false;
@@ -48,10 +50,10 @@ public class StreamingMedia extends CordovaPlugin {
 	}
 
 	private boolean playAudio(String url, JSONObject options) {
-		return play(SimpleAudioStream.class, url, options);
+		return play(SimpleAudioStream.class, url, options,playList);
 	}
 	private boolean playVideo(String url, JSONObject options) {
-		return play(SimpleVideoStream.class, url, options);
+		return play(SimpleVideoStream.class, url, options,playList);
 	}
 
 	private boolean play(final Class activityClass, final String url, final JSONObject options) {
