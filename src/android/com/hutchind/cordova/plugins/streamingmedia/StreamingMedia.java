@@ -85,6 +85,18 @@ public class StreamingMedia extends CordovaPlugin {
 					}
 					
 				}
+				if(playList != null){
+					try {
+						JSONArray playLists = playList.getJSONArray("playList");
+					 	extras.putString("playlistCount",String.valueOf(playLists.length()));
+					 	for(int i = 0 ; i < playLists.length(); i++){
+           					 extras.putString("v"+String.valueOf(i), playLists.getString(i));
+      					}
+					} catch (JSONException e) {
+							Log.e(TAG, "JSONException while trying to read options. Skipping option.");
+					}
+
+				}
 				streamIntent.putExtras(extras);
 				cordovaObj.startActivityForResult(plugin, streamIntent, ACTIVITY_CODE_PLAY_MEDIA);
 			}

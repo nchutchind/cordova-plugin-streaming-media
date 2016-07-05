@@ -21,6 +21,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.VideoView;
 import android.widget.Button;
+import java.util.ArrayList;
 
 public class SimpleVideoStream extends Activity implements
 	MediaPlayer.OnCompletionListener, MediaPlayer.OnPreparedListener,
@@ -31,10 +32,10 @@ public class SimpleVideoStream extends Activity implements
 	private MediaController mMediaController = null;
 	private ProgressBar mProgressBar = null;
 	private String mVideoUrl;
-	private String nextVideoUrl;
 	private Boolean mShouldAutoClose = true;
 	private int videoCount = 0;
 	private int playlistCount = 0;
+	private ArrayList videos;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +45,11 @@ public class SimpleVideoStream extends Activity implements
 
 		Bundle b = getIntent().getExtras();
 		mVideoUrl = b.getString("mediaUrl");
-		nextVideoUrl = b.getString("nextVideoUrl");
+		playlistCount = new Integer(b.getString("playlistCount"));
+		videos = new ArrayList();
+		for(int i=0; i< playlistCount; i++){
+			videos.add(b.getString("v" + String.valueOf(i)));
+		}
 		mShouldAutoClose = b.getBoolean("shouldAutoClose");
 		mShouldAutoClose = mShouldAutoClose == null ? true : mShouldAutoClose;
 
@@ -161,7 +166,12 @@ public class SimpleVideoStream extends Activity implements
 	public void onCompletion(MediaPlayer mp) {
 		stop();
 		if (mShouldAutoClose) {
-			wrapItUp(RESULT_CANCELED, "completion");
+			if(videoCount > playlistCount - 1){
+				wrapItUp(RESULT_CANCELED, "completion");
+			} else{
+				this.play(videos.get(videoCount));
+				videoCount++;
+			}
 			//this.play(nextVideoUrl);
 		}
 	}
