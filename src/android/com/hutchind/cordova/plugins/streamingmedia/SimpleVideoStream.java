@@ -79,6 +79,8 @@ public class SimpleVideoStream extends Activity implements
 		RelativeLayout.LayoutParams pblp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
 		pblp.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
 		mProgressBar.setLayoutParams(pblp);
+		mProgressBar.getIndeterminateDrawable().setColorFilter(
+    Color.RED, android.graphics.PorterDuff.Mode.SRC_IN);
 		// Add progress throbber to view
 		relLayout.addView(mProgressBar);
 		mProgressBar.bringToFront();
@@ -102,7 +104,7 @@ public class SimpleVideoStream extends Activity implements
 	public void onResume() {
 	    super.onResume();  // Always call the superclass method first
 
-	    // Get the Camera instance as the activity achieves full user focus
+	    
 	    
 	}
 
