@@ -90,6 +90,22 @@ public class SimpleVideoStream extends Activity implements
 		play(mVideoUrl);
 	}
 
+	@Override
+	public void onPause() {
+    	super.onPause();  // Always call the superclass method first
+
+    // Release the Camera because we don't need it when paused
+   		mVideoView.pause();
+	}
+
+	@Override
+	public void onResume() {
+	    super.onResume();  // Always call the superclass method first
+
+	    // Get the Camera instance as the activity achieves full user focus
+	    
+	}
+
 	private void play(String url) {
 		mProgressBar.setVisibility(View.VISIBLE);
 		Uri videoUri = Uri.parse(url);
