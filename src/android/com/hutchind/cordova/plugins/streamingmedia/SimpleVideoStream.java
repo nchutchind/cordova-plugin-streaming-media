@@ -169,7 +169,7 @@ public class SimpleVideoStream extends Activity implements
 			if(videoCount > playlistCount - 1){
 				wrapItUp(RESULT_CANCELED, "completion");
 			} else{
-				this.play(videos.get(videoCount));
+				this.play((String)videos.get(videoCount));
 				videoCount++;
 			}
 			//this.play(nextVideoUrl);
