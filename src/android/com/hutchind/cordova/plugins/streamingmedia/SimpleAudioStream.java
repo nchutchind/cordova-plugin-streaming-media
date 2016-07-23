@@ -277,7 +277,12 @@ public class SimpleAudioStream extends Activity implements
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-		mMediaController.show();
+		
+		if(mMediaController.isShowing()){
+			mMediaController.hide();
+		}else{
+			mMediaController.show();
+		}
 		return false;
 	}
 }
