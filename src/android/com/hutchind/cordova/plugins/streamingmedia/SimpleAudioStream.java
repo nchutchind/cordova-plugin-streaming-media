@@ -279,7 +279,7 @@ public class SimpleAudioStream extends Activity implements
 	public boolean onTouchEvent(MotionEvent event) {
 
 		if(mMediaController.isShowing()){
-			mMediaController.hide();
+			mMediaController.show(1);
 		}else{
 			mMediaController.show();
 		}
