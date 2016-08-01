@@ -238,8 +238,13 @@ public class SimpleVideoStream extends Activity implements
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-		if (mMediaController != null)
-			mMediaController.show();
+		if (mMediaController != null){
+			if(mMediaController.isShowing()){
+				mMediaController.hide();
+			} else{
+				mMediaController.show();
+			}
+		}
 		return false;
 	}
 }
