@@ -22,9 +22,10 @@ StreamingMedia.prototype.stopAudio = function (options) {
     cordova.exec(options.successCallback || null, options.errorCallback || null, "StreamingMedia", "stopAudio", [options]);
 };
 
-StreamingMedia.prototype.playVideo = function (url, options) {
+StreamingMedia.prototype.playVideo = function (url, options,playList) {
 	options = options || {};
-	cordova.exec(options.successCallback || null, options.errorCallback || null, "StreamingMedia", "playVideo", [url, options]);
+	playList = playList || {};
+	cordova.exec(options.successCallback || null, options.errorCallback || null, "StreamingMedia", "playVideo", [url, options,playList]);
 };
 
 

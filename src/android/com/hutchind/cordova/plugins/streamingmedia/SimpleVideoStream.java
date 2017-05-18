@@ -20,6 +20,8 @@ import android.widget.MediaController;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.VideoView;
+import android.widget.Button;
+import java.util.ArrayList;
 
 public class SimpleVideoStream extends Activity implements
 	MediaPlayer.OnCompletionListener, MediaPlayer.OnPreparedListener,
@@ -31,6 +33,9 @@ public class SimpleVideoStream extends Activity implements
 	private ProgressBar mProgressBar = null;
 	private String mVideoUrl;
 	private Boolean mShouldAutoClose = true;
+	private int videoCount = 0;
+	private int playlistCount = 0;
+	private ArrayList videos;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -40,16 +45,32 @@ public class SimpleVideoStream extends Activity implements
 
 		Bundle b = getIntent().getExtras();
 		mVideoUrl = b.getString("mediaUrl");
+		playlistCount = new Integer(b.getString("playlistCount"));
+		videos = new ArrayList();
+		for(int i=0; i< playlistCount; i++){
+			videos.add(b.getString("v" + String.valueOf(i)));
+		}
 		mShouldAutoClose = b.getBoolean("shouldAutoClose");
 		mShouldAutoClose = mShouldAutoClose == null ? true : mShouldAutoClose;
 
 		RelativeLayout relLayout = new RelativeLayout(this);
-		relLayout.setBackgroundColor(Color.BLACK);
+		String backgroundColor = b.getString("bgColor");
+		relLayout.setBackgroundColor(Color.parseColor(backgroundColor));
 		RelativeLayout.LayoutParams relLayoutParam = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
 		relLayoutParam.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
 		mVideoView = new VideoView(this);
 		mVideoView.setLayoutParams(relLayoutParam);
 		relLayout.addView(mVideoView);
+
+		// Button myButton = new Button(this);
+		// myButton.setId(3);
+		// android.widget.RelativeLayout.LayoutParams buttonParams =
+  //  		new android.widget.RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
+  //    	RelativeLayout.LayoutParams.WRAP_CONTENT);
+		// buttonParams.addRule(RelativeLayout.CENTER_IN_PARENT);
+		// myButton.setLayoutParams(buttonParams);
+		// myButton.setText("My Button!");
+		// relLayout.addView(myButton);
 
 		// Create progress throbber
 		mProgressBar = new ProgressBar(this);
@@ -58,6 +79,8 @@ public class SimpleVideoStream extends Activity implements
 		RelativeLayout.LayoutParams pblp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
 		pblp.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
 		mProgressBar.setLayoutParams(pblp);
+		// mProgressBar.getIndeterminateDrawable().setColorFilter(
+  //   Color.RED, android.graphics.PorterDuff.Mode.SRC_IN);
 		// Add progress throbber to view
 		relLayout.addView(mProgressBar);
 		mProgressBar.bringToFront();
@@ -66,12 +89,28 @@ public class SimpleVideoStream extends Activity implements
 
 		setContentView(relLayout, relLayoutParam);
 
-		play();
+		play(mVideoUrl);
 	}
 
-	private void play() {
+	@Override
+	public void onPause() {
+    	super.onPause();  // Always call the superclass method first
+
+    // Release the Camera because we don't need it when paused
+   		mVideoView.pause();
+	}
+
+	@Override
+	public void onResume() {
+	    super.onResume();  // Always call the superclass method first
+
+	    
+	    
+	}
+
+	private void play(String url) {
 		mProgressBar.setVisibility(View.VISIBLE);
-		Uri videoUri = Uri.parse(mVideoUrl);
+		Uri videoUri = Uri.parse(url);
 		try {
 			mVideoView.setOnCompletionListener(this);
 			mVideoView.setOnPreparedListener(this);
@@ -145,7 +184,13 @@ public class SimpleVideoStream extends Activity implements
 	public void onCompletion(MediaPlayer mp) {
 		stop();
 		if (mShouldAutoClose) {
-			wrapItUp(RESULT_OK, null);
+			if(videoCount > playlistCount - 1){
+				wrapItUp(RESULT_CANCELED, "completion");
+			} else{
+				this.play((String)videos.get(videoCount));
+				videoCount++;
+			}
+			//this.play(nextVideoUrl);
 		}
 	}
 

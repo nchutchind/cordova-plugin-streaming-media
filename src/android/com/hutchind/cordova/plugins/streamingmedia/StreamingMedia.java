@@ -30,9 +30,11 @@ public class StreamingMedia extends CordovaPlugin {
 	public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
 		this.callbackContext = callbackContext;
 		JSONObject options = null;
+		JSONObject playList = null;
 
 		try {
 			options = args.getJSONObject(1);
+			playList =  args.getJSONObject(2);
 		} catch (JSONException e) {
 			// Developer provided no options. Leave options null.
 		}
@@ -40,7 +42,7 @@ public class StreamingMedia extends CordovaPlugin {
 		if (ACTION_PLAY_AUDIO.equals(action)) {
 			return playAudio(args.getString(0), options);
 		} else if (ACTION_PLAY_VIDEO.equals(action)) {
-			return playVideo(args.getString(0), options);
+			return playVideo(args.getString(0), options,playList);
 		} else {
 			callbackContext.error("streamingMedia." + action + " is not a supported method.");
 			return false;
@@ -48,13 +50,13 @@ public class StreamingMedia extends CordovaPlugin {
 	}
 
 	private boolean playAudio(String url, JSONObject options) {
-		return play(SimpleAudioStream.class, url, options);
+		return play(SimpleAudioStream.class, url, options,null);
 	}
-	private boolean playVideo(String url, JSONObject options) {
-		return play(SimpleVideoStream.class, url, options);
+	private boolean playVideo(String url, JSONObject options,JSONObject playList) {
+		return play(SimpleVideoStream.class, url, options,playList);
 	}
 
-	private boolean play(final Class activityClass, final String url, final JSONObject options) {
+	private boolean play(final Class activityClass, final String url, final JSONObject options,final JSONObject playList) {
 		final CordovaInterface cordovaObj = cordova;
 		final CordovaPlugin plugin = this;
 
@@ -81,9 +83,21 @@ public class StreamingMedia extends CordovaPlugin {
 							Log.e(TAG, "JSONException while trying to read options. Skipping option.");
 						}
 					}
-					streamIntent.putExtras(extras);
+					
 				}
+				if(playList != null){
+					try {
+						JSONArray playLists = playList.getJSONArray("playList");
+					 	extras.putString("playlistCount",String.valueOf(playLists.length()));
+					 	for(int i = 0 ; i < playLists.length(); i++){
+           					 extras.putString("v"+String.valueOf(i), playLists.getString(i));
+      					}
+					} catch (JSONException e) {
+							Log.e(TAG, "JSONException while trying to read options. Skipping option.");
+					}
 
+				}
+				streamIntent.putExtras(extras);
 				cordovaObj.startActivityForResult(plugin, streamIntent, ACTIVITY_CODE_PLAY_MEDIA);
 			}
 		});
