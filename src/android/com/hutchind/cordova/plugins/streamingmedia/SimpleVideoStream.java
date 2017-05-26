@@ -82,7 +82,7 @@ public class SimpleVideoStream extends Activity implements
 			mMediaController = new MediaController(this);
 			mMediaController.setAnchorView(mVideoView);
 			mMediaController.setMediaPlayer(mVideoView);
-			if (!controls) {
+			if (!mControls) {
 				mMediaController.setVisibility(View.GONE);
 			}
 			mVideoView.setMediaController(mMediaController);
