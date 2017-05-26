@@ -73,7 +73,7 @@ public class StreamingMedia extends CordovaPlugin {
 								extras.putString(optKey, (String)options.get(optKey));
 								Log.v(TAG, "Added option: " + optKey + " -> " + String.valueOf(options.get(optKey)));
 							} else if (options.get(optKey).getClass().equals(Boolean.class)) {
-								extras.putBoolean("shouldAutoClose", true);
+								extras.putBoolean(optKey, (Boolean)options.get(optKey));
 								Log.v(TAG, "Added option: " + optKey + " -> " + String.valueOf(options.get(optKey)));
 							}
 
