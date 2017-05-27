@@ -227,6 +227,12 @@ NSString * const DEFAULT_IMAGE_SCALE = @"center";
     } else {
         [moviePlayer setFullscreen:NO animated:NO];
     }
+	
+	// waiting indicator before loading. it's especially useful for over-the-network video plays
+    UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
+    activityIndicator.center = moviePlayer.backgroundView.center;
+    [activityIndicator startAnimating];
+    [moviePlayer.backgroundView addSubview:activityIndicator];
 }
 
 - (void) moviePlayBackDidFinish:(NSNotification*)notification {
