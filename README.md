@@ -40,7 +40,9 @@ cordova plugin add cordova-plugin-streaming-media
     errorCallback: function(errMsg) {
       console.log("Error! " + errMsg);
     },
-    orientation: 'landscape'
+    orientation: 'landscape',
+    shouldAutoClose: true,  // true(default)/false
+    controls: true // true(default)/false. Used to hide controls on fullscreen
   };
   window.plugins.streamingMedia.playVideo(videoUrl, options);
 

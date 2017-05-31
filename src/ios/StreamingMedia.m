@@ -19,6 +19,7 @@
 	UIColor *backgroundColor;
 	UIImageView *imageView;
     BOOL *initFullscreen;
+    BOOL controls;
 }
 
 NSString * const TYPE_VIDEO = @"VIDEO";
@@ -43,6 +44,12 @@ NSString * const DEFAULT_IMAGE_SCALE = @"center";
     } else {
         initFullscreen = true;
     }
+
+    if (![options isKindOfClass:[NSNull class]] && [options objectForKey:@"controls"]) {
+            controls = [[options objectForKey:@"controls"] boolValue];
+        } else {
+            controls = true;
+        }
 
 	if ([type isEqualToString:TYPE_AUDIO]) {
 		// bgImage
@@ -211,7 +218,11 @@ NSString * const DEFAULT_IMAGE_SCALE = @"center";
 												 name:UIDeviceOrientationDidChangeNotification
 											   object:nil];
 
-	moviePlayer.controlStyle = MPMovieControlStyleDefault;
+	if (controls) {
+        [moviePlayer setControlStyle:MPMovieControlStyleDefault];
+    } else {
+        [moviePlayer setControlStyle:MPMovieControlStyleNone];
+    }
 
 	moviePlayer.shouldAutoplay = YES;
 	if (imageView != nil) {

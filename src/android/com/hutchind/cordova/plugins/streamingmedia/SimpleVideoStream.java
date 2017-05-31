@@ -31,6 +31,7 @@ public class SimpleVideoStream extends Activity implements
 	private ProgressBar mProgressBar = null;
 	private String mVideoUrl;
 	private Boolean mShouldAutoClose = true;
+	private boolean mControls;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +43,7 @@ public class SimpleVideoStream extends Activity implements
 		mVideoUrl = b.getString("mediaUrl");
 		mShouldAutoClose = b.getBoolean("shouldAutoClose");
 		mShouldAutoClose = mShouldAutoClose == null ? true : mShouldAutoClose;
+		mControls = b.getBoolean("controls", true);
 
 		RelativeLayout relLayout = new RelativeLayout(this);
 		relLayout.setBackgroundColor(Color.BLACK);
@@ -80,6 +82,9 @@ public class SimpleVideoStream extends Activity implements
 			mMediaController = new MediaController(this);
 			mMediaController.setAnchorView(mVideoView);
 			mMediaController.setMediaPlayer(mVideoView);
+			if (!mControls) {
+				mMediaController.setVisibility(View.GONE);
+			}
 			mVideoView.setMediaController(mMediaController);
 		} catch (Throwable t) {
 			Log.d(TAG, t.toString());
