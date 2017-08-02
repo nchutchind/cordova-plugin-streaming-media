@@ -282,6 +282,7 @@ NSString * const DEFAULT_IMAGE_SCALE = @"center";
 
 - (void)cleanup {
 	NSLog(@"Clean up");
+	[self.viewController dismissViewControllerAnimated:NO completion:nil];
 	imageView = nil;
     initFullscreen = false;
 	backgroundColor = nil;
