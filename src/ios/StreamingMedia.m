@@ -249,12 +249,12 @@ NSString * const DEFAULT_IMAGE_SCALE = @"center";
     initFullscreen = false;
 	backgroundColor = nil;
 
-	// Remove Done Button listener
+	// Remove playback finished listener
 	[[NSNotificationCenter defaultCenter]
 							removeObserver:self
 									  name:AVPlayerItemDidPlayToEndTimeNotification
 									object:moviePlayer.player.currentItem];
-	// Remove playback finished listener
+	// Remove playback finished error listener
 	[[NSNotificationCenter defaultCenter]
 							removeObserver:self
 									  name:AVPlayerItemFailedToPlayToEndTimeNotification
