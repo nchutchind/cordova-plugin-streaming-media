@@ -242,12 +242,6 @@ NSString * const DEFAULT_IMAGE_SCALE = @"center";
 	}
 }
 
--(void)doneButtonClick:(UIButton *)button {
-	[self cleanup];
-	CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:true];
-	[self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
-}
-
 - (void)cleanup {
 	NSLog(@"Clean up");
 	imageView = nil;
