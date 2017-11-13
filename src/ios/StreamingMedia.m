@@ -242,6 +242,7 @@ NSString * const DEFAULT_IMAGE_SCALE = @"center";
 	}
 }
 
+
 - (void)cleanup {
 	NSLog(@"Clean up");
 	imageView = nil;
@@ -252,12 +253,12 @@ NSString * const DEFAULT_IMAGE_SCALE = @"center";
 	[[NSNotificationCenter defaultCenter]
 							removeObserver:self
 									  name:AVPlayerItemDidPlayToEndTimeNotification
-									object:moviePlayer];
+									object:moviePlayer.player.currentItem];
 	// Remove playback finished listener
 	[[NSNotificationCenter defaultCenter]
 							removeObserver:self
 									  name:AVPlayerItemFailedToPlayToEndTimeNotification
-									object:moviePlayer];
+									object:moviePlayer.player.currentItem];
 	// Remove orientation change listener
 	[[NSNotificationCenter defaultCenter]
 							removeObserver:self
