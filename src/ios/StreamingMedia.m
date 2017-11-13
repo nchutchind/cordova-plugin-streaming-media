@@ -20,7 +20,7 @@
 	BOOL shouldAutoClose;
 	UIColor *backgroundColor;
 	UIImageView *imageView;
-    BOOL *initFullscreen;
+    BOOL initFullscreen;
 }
 
 NSString * const TYPE_VIDEO = @"VIDEO";
@@ -43,7 +43,7 @@ NSString * const DEFAULT_IMAGE_SCALE = @"center";
     if (![options isKindOfClass:[NSNull class]] && [options objectForKey:@"initFullscreen"]) {
         initFullscreen = [[options objectForKey:@"initFullscreen"] boolValue];
     } else {
-        initFullscreen = true;
+        initFullscreen = YES;
     }
 
 	if ([type isEqualToString:TYPE_AUDIO]) {
