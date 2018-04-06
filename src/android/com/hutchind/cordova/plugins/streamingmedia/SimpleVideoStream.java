@@ -141,6 +141,9 @@ public class SimpleVideoStream extends Activity implements
 	}
 
 	private void wrapItUp(int resultCode, String message) {
+		if (android.os.Build.VERSION.SDK_INT >= 27) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
+        }
 		Intent intent = new Intent();
 		intent.putExtra("message", message);
 		setResult(resultCode, intent);
