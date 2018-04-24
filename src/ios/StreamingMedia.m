@@ -102,6 +102,8 @@ NSString * const DEFAULT_IMAGE_SCALE = @"center";
 }
 
 -(void)playVideo:(CDVInvokedUrlCommand *) command {
+    AVAudioSession *session = [AVAudioSession sharedInstance];
+    [session setCategory:AVAudioSessionCategoryPlayback error:nil];
 	[self play:command type:[NSString stringWithString:TYPE_VIDEO]];
 }
 
