@@ -2,6 +2,8 @@
 #import <Cordova/CDV.h>
 #import <AVFoundation/AVFoundation.h>
 #import <AVKit/AVKit.h>
+#import "LandscapeVideo.h"
+#import "PortraitVideo.h"
 
 @interface StreamingMedia()
 	- (void)parseOptions:(NSDictionary *) options type:(NSString *) type;
@@ -16,7 +18,7 @@
 
 @implementation StreamingMedia {
 	NSString* callbackId;
-	AVPlayerViewController *moviePlayer;
+	LandscapeAVPlayerViewController *moviePlayer;  //change to PortraitAVPlayerViewController to force Portrait
 	BOOL shouldAutoClose;
 	UIColor *backgroundColor;
 	UIImageView *imageView;
@@ -176,8 +178,9 @@ NSString * const DEFAULT_IMAGE_SCALE = @"center";
     
 	NSURL *url             =  [NSURL URLWithString:uri];
     AVPlayer *movie        =  [AVPlayer playerWithURL:url];
-	moviePlayer            =  [[AVPlayerViewController alloc] init];
-
+	moviePlayer            =  [[LandscapeAVPlayerViewController alloc] init]; // change to PortraitAVPlayerViewController to force portrait
+    
+    
     [moviePlayer setPlayer:movie];
     [moviePlayer setShowsPlaybackControls:YES];
     if(@available(iOS 11.0, *)) { [moviePlayer setEntersFullScreenWhenPlaybackBegins:YES]; }
