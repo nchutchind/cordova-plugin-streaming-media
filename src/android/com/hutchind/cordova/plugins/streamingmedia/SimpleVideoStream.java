@@ -30,7 +30,6 @@ public class SimpleVideoStream extends Activity implements
 	private MediaController mMediaController = null;
 	private ProgressBar mProgressBar = null;
 	private String mVideoUrl;
-	private Boolean mShouldAutoClose = true;
 	private boolean mControls;
 
 	@Override
@@ -41,8 +40,6 @@ public class SimpleVideoStream extends Activity implements
 
 		Bundle b = getIntent().getExtras();
 		mVideoUrl = b.getString("mediaUrl");
-		mShouldAutoClose = b.getBoolean("shouldAutoClose");
-		mShouldAutoClose = mShouldAutoClose == null ? true : mShouldAutoClose;
 		mControls = b.getBoolean("controls", true);
 
 		RelativeLayout relLayout = new RelativeLayout(this);
@@ -137,10 +134,12 @@ public class SimpleVideoStream extends Activity implements
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
+		Log.d(TAG, "onDestroy triggered.");
 		stop();
 	}
 
 	private void wrapItUp(int resultCode, String message) {
+		Log.d(TAG, "wrapItUp was triggered.");
 		Intent intent = new Intent();
 		intent.putExtra("message", message);
 		setResult(resultCode, intent);
@@ -148,10 +147,9 @@ public class SimpleVideoStream extends Activity implements
 	}
 
 	public void onCompletion(MediaPlayer mp) {
+		Log.d(TAG, "onCompletion triggered.");
 		stop();
-		if (mShouldAutoClose) {
-			wrapItUp(RESULT_OK, null);
-		}
+		wrapItUp(RESULT_OK, null);
 	}
 
 	public boolean onError(MediaPlayer mp, int what, int extra) {
