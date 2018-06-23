@@ -38,6 +38,10 @@
 		</config-file>
 		<header-file src="src/ios/StreamingMedia.h" />
 		<source-file src="src/ios/StreamingMedia.m" />
+		<header-file src="src/ios/LandscapeVideo.h" />
+		<source-file src="src/ios/LandscapeVideo.m" />
+		<header-file src="src/ios/PortraitVideo.h" />
+		<source-file src="src/ios/PortraitVideo.m" />
 		<framework src="MediaPlayer.framework" />
 	</platform>
 
