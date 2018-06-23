@@ -57,7 +57,8 @@ cordova plugin add https://github.com/shamilovtim/cordova-plugin-streaming-media
     bgColor: "#FFFFFF",
     bgImage: "<SWEET_BACKGROUND_IMAGE>",
     bgImageScale: "fit", // other valid values: "stretch"
-    initFullscreen: false, // true(default)/false iOS only
+    initFullscreen: false, // true is default. iOS only.
+    keepAwake: true, // prevents device from sleeping. false is default. Android only.
     successCallback: function() {
       console.log("Player closed without error.");
     },

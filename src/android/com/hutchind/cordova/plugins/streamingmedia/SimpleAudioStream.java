@@ -75,6 +75,15 @@ public class SimpleAudioStream extends Activity implements
 		audioView.addView(mMediaControllerView);
 		setContentView(audioView, relLayoutParam);
 
+
+		// stop the screen from going to sleep, parameter from javascript
+		Boolean keepAwake = b.getBoolean("keepAwake");
+		if (keepAwake == false) {
+			mMediaControllerView.setKeepScreenOn(false);
+		} else {
+			mMediaControllerView.setKeepScreenOn(true);
+		}
+
 		play();
 	}
 
@@ -97,6 +106,7 @@ public class SimpleAudioStream extends Activity implements
 			mMediaPlayer.setOnCompletionListener(this);
 			mMediaPlayer.setOnBufferingUpdateListener(this);
 			mMediaPlayer.setOnErrorListener(this);
+			mMediaPlayer.setScreenOnWhilePlaying(true);
 			mMediaController = new MediaController(this);
 
 			mMediaPlayer.prepareAsync();
