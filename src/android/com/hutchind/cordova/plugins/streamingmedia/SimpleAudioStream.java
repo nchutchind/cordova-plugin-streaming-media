@@ -39,8 +39,7 @@ public class SimpleAudioStream extends Activity implements
 		String backgroundColor = b.getString("bgColor");
 		String backgroundImagePath = b.getString("bgImage");
 		String backgroundImageScale = b.getString("bgImageScale");
-		mShouldAutoClose = b.getBoolean("shouldAutoClose");
-		mShouldAutoClose = mShouldAutoClose == null ? true : mShouldAutoClose;
+		mShouldAutoClose = b.getBoolean("shouldAutoClose", true);
 		backgroundImageScale = backgroundImageScale == null ? "center" : backgroundImageScale.toLowerCase();
 		ImageView.ScaleType bgImageScaleType;
 		// Default background to black
