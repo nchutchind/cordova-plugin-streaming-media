@@ -76,13 +76,12 @@ public class SimpleAudioStream extends Activity implements
 		setContentView(audioView, relLayoutParam);
 
 
-		// stop the screen from going to sleep, parameter from javascript
-		Boolean keepAwake = b.getBoolean("keepAwake");
+		// stop the screen from going to sleep. keepawake parameter from javascript. default is true.
+		mMediaControllerView.setKeepScreenOn(true);
+		Boolean keepAwake = b.getBoolean("keepAwake", true);
 		if (keepAwake == false) {
 			mMediaControllerView.setKeepScreenOn(false);
-		} else {
-			mMediaControllerView.setKeepScreenOn(true);
-		}
+		} 
 
 		play();
 	}
