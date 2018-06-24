@@ -18,11 +18,12 @@
 
 @implementation StreamingMedia {
 	NSString* callbackId;
-	LandscapeAVPlayerViewController *moviePlayer;  //change to PortraitAVPlayerViewController to force Portrait
+	AVPlayerViewController *moviePlayer;
 	BOOL shouldAutoClose;
 	UIColor *backgroundColor;
 	UIImageView *imageView;
     BOOL initFullscreen;
+    NSString *mOrientation;
 }
 
 NSString * const TYPE_VIDEO = @"VIDEO";
@@ -30,7 +31,9 @@ NSString * const TYPE_AUDIO = @"AUDIO";
 NSString * const DEFAULT_IMAGE_SCALE = @"center";
 
 -(void)parseOptions:(NSDictionary *)options type:(NSString *) type {
-	// Common options
+    // Common options
+    mOrientation = options[@"orientation"] ?: @"default";
+    
 	if (![options isKindOfClass:[NSNull class]] && [options objectForKey:@"shouldAutoClose"]) {
 		shouldAutoClose = [[options objectForKey:@"shouldAutoClose"] boolValue];
 	} else {
@@ -178,8 +181,13 @@ NSString * const DEFAULT_IMAGE_SCALE = @"center";
     
 	NSURL *url             =  [NSURL URLWithString:uri];
     AVPlayer *movie        =  [AVPlayer playerWithURL:url];
-	moviePlayer            =  [[LandscapeAVPlayerViewController alloc] init]; // change to PortraitAVPlayerViewController to force portrait
-    
+    if ([mOrientation isEqualToString:@"landscape"]) {
+        moviePlayer            =  [[LandscapeAVPlayerViewController alloc] init];
+    } else if ([mOrientation isEqualToString:@"portrait"]) {
+        moviePlayer            =  [[PortraitAVPlayerViewController alloc] init];
+    } else {
+        moviePlayer            =  [[AVPlayerViewController alloc] init];
+    }
     
     [moviePlayer setPlayer:movie];
     [moviePlayer setShowsPlaybackControls:YES];
