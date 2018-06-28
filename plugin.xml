@@ -36,6 +36,12 @@
 				<param name="ios-package" value="StreamingMedia" />
 			</feature>
 		</config-file>
+		<config-file target="*-Info.plist" parent="UIBackgroundModes">
+			<array>
+				<string>audio</string>
+				<string>fetch</string>
+			</array>
+		</config-file>
 		<header-file src="src/ios/StreamingMedia.h" />
 		<source-file src="src/ios/StreamingMedia.m" />
 		<header-file src="src/ios/LandscapeVideo.h" />
