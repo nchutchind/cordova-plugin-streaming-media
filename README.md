@@ -78,3 +78,9 @@ cordova plugin add https://github.com/nchutchind/cordova-plugin-streaming-media
   window.plugins.streamingMedia.resumeAudio();  
 
 ```
+
+## Special Thanks
+
+[Michael Robinson (@faceleg)](https://github.com/faceleg)
+
+[Timothy Shamilov (@shamilovtim)](https://github.com/shamilovtim)
