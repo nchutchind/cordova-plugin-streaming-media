@@ -19,6 +19,10 @@
     "cordova-fireos"
   ],
   "author": "Nicholas Hutchind",
+  "contributors": [
+      "Timothy Shamilov",
+      "Michael Robinson"
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/nchutchind/Streaming-Media-Cordova-Plugin/issues"
