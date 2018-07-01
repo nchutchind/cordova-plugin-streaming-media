@@ -125,7 +125,6 @@ MediaPlayer.OnErrorListener, MediaPlayer.OnBufferingUpdateListener {
 
 	private void pause() {
 		Log.d(TAG, "Pausing video.");
-		StreamingMedia.callbackContext.sendPluginResult(StreamingMedia.onPause);
 		mVideoView.pause();
 	}
 
