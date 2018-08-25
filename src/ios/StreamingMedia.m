@@ -71,6 +71,9 @@ NSString * const DEFAULT_IMAGE_SCALE = @"center";
         } else {
             backgroundColor = [UIColor blackColor];
         }
+    } else {
+        // Reset overlay on video player after playing audio
+        [self cleanup];
     }
     // No specific options for video yet
 }
