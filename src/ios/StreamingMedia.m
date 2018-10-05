@@ -94,17 +94,23 @@ NSString * const DEFAULT_IMAGE_SCALE = @"center";
 }
 
 -(void)playVideo:(CDVInvokedUrlCommand *) command {
-    AVAudioSession *session = [AVAudioSession sharedInstance];
-    [session setCategory:AVAudioSessionCategoryPlayback error:nil];
+    [self ignoreMute];
     [self play:command type:[NSString stringWithString:TYPE_VIDEO]];
 }
 
 -(void)playAudio:(CDVInvokedUrlCommand *) command {
+    [self ignoreMute];
     [self play:command type:[NSString stringWithString:TYPE_AUDIO]];
 }
 
 -(void)stopAudio:(CDVInvokedUrlCommand *) command {
     [self stop:command type:[NSString stringWithString:TYPE_AUDIO]];
+}
+
+// Ignore the mute button
+-(void)ignoreMute {
+    AVAudioSession *session = [AVAudioSession sharedInstance];
+    [session setCategory:AVAudioSessionCategoryPlayback error:nil];
 }
 
 -(void) setBackgroundColor:(NSString *)color {
