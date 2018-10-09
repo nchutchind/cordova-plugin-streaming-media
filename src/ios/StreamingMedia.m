@@ -215,7 +215,7 @@ NSString * const DEFAULT_IMAGE_SCALE = @"center";
     [moviePlayer setPlayer:movie];
     [moviePlayer setShowsPlaybackControls:YES];
     [moviePlayer setUpdatesNowPlayingInfoCenter:YES];
-
+    
     if(@available(iOS 11.0, *)) { [moviePlayer setEntersFullScreenWhenPlaybackBegins:YES]; }
     
     // present modally so we get a close button
@@ -270,12 +270,12 @@ NSString * const DEFAULT_IMAGE_SCALE = @"center";
                                                object:nil];
     
     /* Listen for click on the "Done" button
-    
-    // Deprecated.. AVPlayerController doesn't offer a "Done" listener... thanks apple. We'll listen for an error when playback finishes
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                            selector:@selector(doneButtonClick:)
-                                                name:MPMoviePlayerWillExitFullscreenNotification
-                                                object:nil];
+     
+     // Deprecated.. AVPlayerController doesn't offer a "Done" listener... thanks apple. We'll listen for an error when playback finishes
+     [[NSNotificationCenter defaultCenter] addObserver:self
+     selector:@selector(doneButtonClick:)
+     name:MPMoviePlayerWillExitFullscreenNotification
+     object:nil];
      */
 }
 
