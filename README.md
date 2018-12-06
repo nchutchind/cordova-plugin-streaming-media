@@ -16,8 +16,8 @@ cordova plugin add https://github.com/nchutchind/cordova-plugin-streaming-media
 ```
 
 ### iOS specifics
-* Uses the AVPlayerViewController, supported for iOS 9+.
-* Tested on iOS 11
+* Uses the AVPlayerViewController
+* Tested on iOS 12 or later
 
 ### Android specifics
 * Uses VideoView and MediaPlayer.
