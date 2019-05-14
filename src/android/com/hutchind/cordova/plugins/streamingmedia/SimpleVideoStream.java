@@ -32,6 +32,10 @@ MediaPlayer.OnErrorListener, MediaPlayer.OnBufferingUpdateListener {
 	private String mVideoUrl;
 	private Boolean mShouldAutoClose = true;
 	private boolean mControls;
+	// video progress
+	private int currentTime = 0;
+	private int duration = 0;
+	private double progress = 0.0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -113,6 +117,18 @@ MediaPlayer.OnErrorListener, MediaPlayer.OnBufferingUpdateListener {
 		}
 	};
 
+	private Runnable getProgress = new Runnable() {
+		@Override
+		public void run() {
+			// Only update if greater than previous value
+			if (duration > 0 && (mVideoView.getCurrentPosition() > currentTime) ) {
+				currentTime = mVideoView.getCurrentPosition();
+				progress = ( (double)currentTime / (double)duration ) * 100;
+			}
+			mVideoView.postDelayed(getProgress, 500);
+		}
+	};
+
 	@Override
 	public void onPrepared(MediaPlayer mp) {
 		Log.d(TAG, "Stream is prepared");
@@ -121,6 +137,9 @@ MediaPlayer.OnErrorListener, MediaPlayer.OnBufferingUpdateListener {
 		mVideoView.requestFocus();
 		mVideoView.start();
 		mVideoView.postDelayed(checkIfPlaying, 0);
+		mVideoView.postDelayed(getProgress, 50);
+		// Init duration
+		duration = mVideoView.getDuration();
 	}
 
 	private void pause() {
@@ -136,7 +155,7 @@ MediaPlayer.OnErrorListener, MediaPlayer.OnBufferingUpdateListener {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		Log.d(TAG, "onDestroy triggered.");
+		Log.d(TAG, "onDestroy triggered.");		
 		stop();
 	}
 
@@ -152,7 +171,7 @@ MediaPlayer.OnErrorListener, MediaPlayer.OnBufferingUpdateListener {
 		Log.d(TAG, "onCompletion triggered.");
 		stop();
 		if (mShouldAutoClose) {
-			wrapItUp(RESULT_OK, null);
+			wrapItUp(RESULT_OK, Double.toString(progress));
 		}
 	}
 
@@ -189,7 +208,7 @@ MediaPlayer.OnErrorListener, MediaPlayer.OnBufferingUpdateListener {
 	@Override
 	public void onBackPressed() {
 		// If we're leaving, let's finish the activity
-		wrapItUp(RESULT_OK, null);
+		wrapItUp(RESULT_OK, Double.toString(progress));
 	}
 
 	@Override
