@@ -16,6 +16,10 @@
 - (void)cleanup;
 @end
 
+@interface AVPlayerViewController (Dismiss)
+- (void)viewWillDisappear:(BOOL)animated;
+@end
+
 @implementation StreamingMedia {
     NSString* callbackId;
     AVPlayerViewController *moviePlayer;
@@ -268,6 +272,12 @@ NSString * const DEFAULT_IMAGE_SCALE = @"center";
                                              selector:@selector(orientationChanged:)
                                                  name:UIDeviceOrientationDidChangeNotification
                                                object:nil];
+
+    // TODO: Listen for view dismiss
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(moviePlayBackDidFinish:)
+                                                 name:@"dismissing"
+                                               object:nil];
     
     /* Listen for click on the "Done" button
      
@@ -340,6 +350,12 @@ NSString * const DEFAULT_IMAGE_SCALE = @"center";
 }
 
 - (void) moviePlayBackDidFinish:(NSNotification*)notification {
+    // calculate progress
+    CMTime duration = moviePlayer.player.currentItem.duration;
+    CMTime currentTime =  moviePlayer.player.currentItem.currentTime;
+    double progress = (CMTimeGetSeconds(currentTime) / CMTimeGetSeconds(duration)) * 100;
+    NSLog(@"Progress: %f", progress);
+
     NSLog(@"Playback did finish with auto close being %d, and error message being %@", shouldAutoClose, notification.userInfo);
     NSDictionary *notificationUserInfo = [notification userInfo];
     NSNumber *errorValue = [notificationUserInfo objectForKey:AVPlayerItemFailedToPlayToEndTimeErrorKey];
@@ -360,7 +376,7 @@ NSString * const DEFAULT_IMAGE_SCALE = @"center";
         if ([errorMsg length] != 0) {
             pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:errorMsg];
         } else {
-            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:true];
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDouble:progress];
         }
         [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
     }
@@ -395,4 +411,15 @@ NSString * const DEFAULT_IMAGE_SCALE = @"center";
         moviePlayer = nil;
     }
 }
+@end
+
+
+@implementation AVPlayerViewController (Dismiss)
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    if (self.isBeingDismissed == false) {
+       return;
+    }
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"dismissing" object:nil];
+ }
 @end
