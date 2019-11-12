@@ -57,7 +57,8 @@ MediaPlayer.OnErrorListener, MediaPlayer.OnBufferingUpdateListener {
 		// START EDIT
 		close = new TextView(this);
 		close.setText("Close");
-		close.setBackgroundColor(Color.parseColor("#00000070"));
+		close.setBackgroundColor(Color.BLACK);
+		close.getBackground().setAlpha(128);
 		close.setTextColor(Color.WHITE);
 		close.setTextSize(18);
 		close.setPadding(10, 10, 10, 10);
