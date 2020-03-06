@@ -9,6 +9,10 @@ This plugin allows you to stream audio and video in a fullscreen, native player 
 * 1.0.0 Works with Cordova 3.x
 * 1.0.1+ Works with Cordova >= 4.0
 
+## Message from the maintainer:
+
+I no longer contribute to Cordova or Ionic full time. If your org needs work on this plugin please consider funding it and hiring me for improvements or otherwise consider donating your time and submitting a PR for whatever you need fixed. Thanks!
+
 ## Installation
 
 ```
