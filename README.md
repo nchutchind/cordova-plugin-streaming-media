@@ -11,7 +11,7 @@ This plugin allows you to stream audio and video in a fullscreen, native player 
 
 ## Message from the maintainer:
 
-I no longer contribute to Cordova or Ionic full time. If your org needs work on this plugin please consider funding it and hiring me for improvements or otherwise consider donating your time and submitting a PR for whatever you need fixed. Thanks!
+I no longer contribute to Cordova or Ionic full time. If your org needs work on this plugin please consider funding it and hiring me for improvements or otherwise consider donating your time and submitting a PR for whatever you need fixed. My contact info can be found [here](https://github.com/shamilovtim).
 
 ## Installation
 
