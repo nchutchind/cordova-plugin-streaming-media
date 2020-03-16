@@ -19,6 +19,7 @@ import android.view.WindowManager;
 import android.widget.MediaController;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.VideoView;
 
 public class SimpleVideoStream extends Activity implements
@@ -29,6 +30,7 @@ MediaPlayer.OnErrorListener, MediaPlayer.OnBufferingUpdateListener {
 	private MediaPlayer mMediaPlayer = null;
 	private MediaController mMediaController = null;
 	private ProgressBar mProgressBar = null;
+	private TextView close = null;
 	private String mVideoUrl;
 	private Boolean mShouldAutoClose = true;
 	private boolean mControls;
@@ -51,6 +53,26 @@ MediaPlayer.OnErrorListener, MediaPlayer.OnBufferingUpdateListener {
 		mVideoView = new VideoView(this);
 		mVideoView.setLayoutParams(relLayoutParam);
 		relLayout.addView(mVideoView);
+
+		// START EDIT
+		close = new TextView(this);
+		close.setText("Close");
+		close.setBackgroundColor(Color.BLACK);
+		close.getBackground().setAlpha(128);
+		close.setTextColor(Color.WHITE);
+		close.setTextSize(18);
+		close.setPadding(10, 10, 10, 10);
+		RelativeLayout.LayoutParams closeLayoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+		closeLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE);
+		close.setLayoutParams(closeLayoutParams);
+		close.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				wrapItUp(RESULT_OK, null);
+			}
+		});
+		relLayout.addView(close);
+		close.bringToFront();
+		// END EDIT
 
 		// Create progress throbber
 		mProgressBar = new ProgressBar(this);
