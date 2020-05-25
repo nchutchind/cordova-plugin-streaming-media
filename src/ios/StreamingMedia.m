@@ -214,7 +214,7 @@ NSString * const DEFAULT_IMAGE_SCALE = @"center";
     
     [moviePlayer setPlayer:movie];
     [moviePlayer setShowsPlaybackControls:YES];
-    [moviePlayer setUpdatesNowPlayingInfoCenter:YES];
+    [moviePlayer setUpdatesNowPlayingInfoCenter:NO];
     
     if(@available(iOS 11.0, *)) { [moviePlayer setEntersFullScreenWhenPlaybackBegins:YES]; }
     
@@ -238,12 +238,6 @@ NSString * const DEFAULT_IMAGE_SCALE = @"center";
 }
 
 - (void) handleListeners {
-    
-    // Listen for re-maximize
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(appDidBecomeActive:)
-                                                 name:UIApplicationDidBecomeActiveNotification
-                                               object:nil];
     
     // Listen for minimize
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -321,22 +315,7 @@ NSString * const DEFAULT_IMAGE_SCALE = @"center";
 
 - (void) appDidEnterBackground:(NSNotification*)notification {
     NSLog(@"appDidEnterBackground");
-    
-    if (moviePlayer && movie && videoType == TYPE_AUDIO)
-    {
-        NSLog(@"did set player layer to nil");
-        [moviePlayer setPlayer: nil];
-    }
-}
-
-- (void) appDidBecomeActive:(NSNotification*)notification {
-    NSLog(@"appDidBecomeActive");
-    
-    if (moviePlayer && movie && videoType == TYPE_AUDIO)
-    {
-        NSLog(@"did reinstate playerlayer");
-        [moviePlayer setPlayer:movie];
-    }
+    [self cleanup];
 }
 
 - (void) moviePlayBackDidFinish:(NSNotification*)notification {
@@ -391,7 +370,9 @@ NSString * const DEFAULT_IMAGE_SCALE = @"center";
     
     if (moviePlayer) {
         [moviePlayer.player pause];
+        [moviePlayer.player replaceCurrentItemWithPlayerItem:nil];
         [moviePlayer dismissViewControllerAnimated:YES completion:nil];
+        [moviePlayer removeFromParentViewController];
         moviePlayer = nil;
     }
 }
