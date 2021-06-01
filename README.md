@@ -38,15 +38,18 @@ cordova plugin add https://github.com/nchutchind/cordova-plugin-streaming-media
 
   // Play a video with callbacks
   var options = {
-    successCallback: function() {
+    successCallback: function(res) {
       console.log("Video was closed without error.");
+      console.log(res); // {"duration":"19641"} a json returned for resume video later if req
     },
     errorCallback: function(errMsg) {
-      console.log("Error! " + errMsg);
+      console.log(errMsg);  console.log(res); 
+      // {"duration":"19641","message": "Error Message"} a json content
     },
     orientation: 'landscape',
     shouldAutoClose: true,  // true(default)/false
-    controls: true // true(default)/false. Used to hide controls on fullscreen
+    controls: true,// true(default)/false. Used to hide controls on fullscreen
+    start: 0// Seekto in miliseconds
   };
   window.plugins.streamingMedia.playVideo(videoUrl, options);
 

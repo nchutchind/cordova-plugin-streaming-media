@@ -63,7 +63,7 @@ public class StreamingMedia extends CordovaPlugin {
 				final Intent streamIntent = new Intent(cordovaObj.getActivity().getApplicationContext(), activityClass);
 				Bundle extras = new Bundle();
 				extras.putString("mediaUrl", url);
-
+		
 				if (options != null) {
 					Iterator<String> optKeys = options.keys();
 					while (optKeys.hasNext()) {
@@ -93,15 +93,15 @@ public class StreamingMedia extends CordovaPlugin {
 	public void onActivityResult(int requestCode, int resultCode, Intent intent) {
 		Log.v(TAG, "onActivityResult: " + requestCode + " " + resultCode);
 		super.onActivityResult(requestCode, resultCode, intent);
+			String message = "";
+		if (intent != null && intent.hasExtra("message")) {
+					message = intent.getStringExtra("message");
+				}
 		if (ACTIVITY_CODE_PLAY_MEDIA == requestCode) {
 			if (Activity.RESULT_OK == resultCode) {
-				this.callbackContext.success();
+				this.callbackContext.success(message);
 			} else if (Activity.RESULT_CANCELED == resultCode) {
-				String errMsg = "Error";
-				if (intent != null && intent.hasExtra("message")) {
-					errMsg = intent.getStringExtra("message");
-				}
-				this.callbackContext.error(errMsg);
+				this.callbackContext.error(message);
 			}
 		}
 	}
