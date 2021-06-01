@@ -20,6 +20,9 @@ import android.widget.MediaController;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.VideoView;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class SimpleVideoStream extends Activity implements
 MediaPlayer.OnCompletionListener, MediaPlayer.OnPreparedListener,
@@ -30,6 +33,7 @@ MediaPlayer.OnErrorListener, MediaPlayer.OnBufferingUpdateListener {
 	private MediaController mMediaController = null;
 	private ProgressBar mProgressBar = null;
 	private String mVideoUrl;
+	private String start;
 	private Boolean mShouldAutoClose = true;
 	private boolean mControls;
 
@@ -38,9 +42,10 @@ MediaPlayer.OnErrorListener, MediaPlayer.OnBufferingUpdateListener {
 		super.onCreate(savedInstanceState);
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
+ getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
 		Bundle b = getIntent().getExtras();
 		mVideoUrl = b.getString("mediaUrl");
+		start = b.getString("start",0);
 		mShouldAutoClose = b.getBoolean("shouldAutoClose", true);
 		mControls = b.getBoolean("controls", true);
 
@@ -120,6 +125,7 @@ MediaPlayer.OnErrorListener, MediaPlayer.OnBufferingUpdateListener {
 		mMediaPlayer.setOnBufferingUpdateListener(this);
 		mVideoView.requestFocus();
 		mVideoView.start();
+		mVideoView.seekTo(Integer.valueOf(start));
 		mVideoView.postDelayed(checkIfPlaying, 0);
 	}
 
@@ -143,7 +149,16 @@ MediaPlayer.OnErrorListener, MediaPlayer.OnBufferingUpdateListener {
 	private void wrapItUp(int resultCode, String message) {
 		Log.d(TAG, "wrapItUp was triggered.");
 		Intent intent = new Intent();
-		intent.putExtra("message", message);
+	
+		JSONObject dataToSend = new JSONObject();
+		 try {
+       	dataToSend.put("duration", String.valueOf(mVideoView.getCurrentPosition()));
+		dataToSend.put("message", message);
+  	 	 } catch (Exception e) {
+        e.printStackTrace();
+   		 }
+		
+		intent.putExtra("message", dataToSend.toString());
 		setResult(resultCode, intent);
 		finish();
 	}
