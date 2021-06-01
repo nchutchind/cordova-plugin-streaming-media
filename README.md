@@ -49,7 +49,7 @@ cordova plugin add https://github.com/nchutchind/cordova-plugin-streaming-media
     orientation: 'landscape',
     shouldAutoClose: true,  // true(default)/false
     controls: true,// true(default)/false. Used to hide controls on fullscreen
-    start: 0// Seekto in miliseconds 0(Default)/ time in miliseconds
+    start: 0// Seekto in miliseconds 0(Default)/ time in miliseconds (Android Only)
   };
   window.plugins.streamingMedia.playVideo(videoUrl, options);
 
