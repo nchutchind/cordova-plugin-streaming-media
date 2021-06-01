@@ -43,7 +43,7 @@ cordova plugin add https://github.com/nchutchind/cordova-plugin-streaming-media
       console.log(res); // {"duration":"19641"} a json returned for resume video later if req
     },
     errorCallback: function(errMsg) {
-      console.log(errMsg);  console.log(res); 
+      console.log(errMsg); 
       // {"duration":"19641","message": "Error Message"} a json content
     },
     orientation: 'landscape',
