@@ -46,7 +46,10 @@ cordova plugin add https://github.com/nchutchind/cordova-plugin-streaming-media
     },
     orientation: 'landscape',
     shouldAutoClose: true,  // true(default)/false
-    controls: true // true(default)/false. Used to hide controls on fullscreen
+    controls: true, // true(default)/false. Used to hide controls on fullscreen
+    headers: {
+      Authorization: `Basic ${btoa(username + ':' + password)}`
+    }
   };
   window.plugins.streamingMedia.playVideo(videoUrl, options);
 

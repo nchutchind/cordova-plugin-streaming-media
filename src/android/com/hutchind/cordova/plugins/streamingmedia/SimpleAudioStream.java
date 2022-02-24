@@ -16,6 +16,9 @@ import android.view.Window;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.MediaController;
+import java.util.Properties;
+import java.util.Map;
+import java.io.Serializable;
 
 public class SimpleAudioStream extends Activity implements
 MediaPlayer.OnCompletionListener, MediaPlayer.OnPreparedListener,
@@ -29,6 +32,7 @@ MediaController.MediaPlayerControl {
 	private View mMediaControllerView;
 	private String mAudioUrl;
 	private Boolean mShouldAutoClose = true;
+	private Map<String, String> headers;
 
 	@Override
 	public void onCreate(Bundle icicle) {
@@ -40,6 +44,7 @@ MediaController.MediaPlayerControl {
 		String backgroundImagePath = b.getString("bgImage");
 		String backgroundImageScale = b.getString("bgImageScale");
 		mShouldAutoClose = b.getBoolean("shouldAutoClose", true);
+		headers = (Map<String,String>) b.getSerializable(StreamingMedia.INTENT_EXTRA_HEADERS);
 		backgroundImageScale = backgroundImageScale == null ? "center" : backgroundImageScale.toLowerCase();
 		ImageView.ScaleType bgImageScaleType;
 		// Default background to black
@@ -98,7 +103,7 @@ MediaController.MediaPlayerControl {
 					Log.e(TAG, e.toString());
 				}
 			}
-			mMediaPlayer.setDataSource(this, myUri); // Go to Initialized state
+			mMediaPlayer.setDataSource(this, myUri, headers); // Go to Initialized state
 			mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 			mMediaPlayer.setOnPreparedListener(this);
 			mMediaPlayer.setOnCompletionListener(this);

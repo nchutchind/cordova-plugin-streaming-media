@@ -20,6 +20,9 @@ import android.widget.MediaController;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.VideoView;
+import java.util.Properties;
+import java.util.Map;
+import java.io.Serializable;
 
 public class SimpleVideoStream extends Activity implements
 MediaPlayer.OnCompletionListener, MediaPlayer.OnPreparedListener,
@@ -32,6 +35,7 @@ MediaPlayer.OnErrorListener, MediaPlayer.OnBufferingUpdateListener {
 	private String mVideoUrl;
 	private Boolean mShouldAutoClose = true;
 	private boolean mControls;
+	private Map<String, String> headers;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +47,7 @@ MediaPlayer.OnErrorListener, MediaPlayer.OnBufferingUpdateListener {
 		mVideoUrl = b.getString("mediaUrl");
 		mShouldAutoClose = b.getBoolean("shouldAutoClose", true);
 		mControls = b.getBoolean("controls", true);
+		headers = (Map<String,String>) b.getSerializable(StreamingMedia.INTENT_EXTRA_HEADERS);
 
 		RelativeLayout relLayout = new RelativeLayout(this);
 		relLayout.setBackgroundColor(Color.BLACK);
@@ -77,7 +82,7 @@ MediaPlayer.OnErrorListener, MediaPlayer.OnBufferingUpdateListener {
 			mVideoView.setOnCompletionListener(this);
 			mVideoView.setOnPreparedListener(this);
 			mVideoView.setOnErrorListener(this);
-			mVideoView.setVideoURI(videoUri);
+			mVideoView.setVideoURI(videoUri, headers);
 			mMediaController = new MediaController(this);
 			mMediaController.setAnchorView(mVideoView);
 			mMediaController.setMediaPlayer(mVideoView);
