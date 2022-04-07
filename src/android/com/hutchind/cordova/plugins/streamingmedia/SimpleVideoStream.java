@@ -3,7 +3,6 @@ package com.hutchind.cordova.plugins.streamingmedia;
 import android.app.Activity;
 import android.content.res.Configuration;
 import android.graphics.Color;
-import android.graphics.Point;
 import android.media.MediaPlayer;
 import android.widget.MediaController;
 import android.content.Intent;
@@ -12,23 +11,34 @@ import android.view.MotionEvent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Display;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.MediaController;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.VideoView;
-import java.util.Properties;
+
 import java.util.Map;
-import java.io.Serializable;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import org.apache.cordova.PluginResult;
+import org.apache.cordova.CallbackContext;
 
 public class SimpleVideoStream extends Activity implements
 MediaPlayer.OnCompletionListener, MediaPlayer.OnPreparedListener,
-MediaPlayer.OnErrorListener, MediaPlayer.OnBufferingUpdateListener {
+MediaPlayer.OnErrorListener, MediaPlayer.OnBufferingUpdateListener,
+EventfulVideoView.PlayPauseListener, EventfulVideoView.SeekToListener {
+
+	public static final String CALLBACK_EVENT_TYPE_KEY = "eventType";
+	public static final String CALLBACK_EVENT_TYPE_VALUE_PLAY = "PLAY";
+	public static final String CALLBACK_EVENT_TYPE_VALUE_PAUSE = "PAUSE";
+	public static final String CALLBACK_EVENT_TYPE_VALUE_SEEK = "SEEK";
+
+	public static final String CALLBACK_SEEK_KEY_MSEC = "msec";
+
 	private String TAG = getClass().getSimpleName();
-	private VideoView mVideoView = null;
+	private EventfulVideoView mVideoView = null;
 	private MediaPlayer mMediaPlayer = null;
 	private MediaController mMediaController = null;
 	private ProgressBar mProgressBar = null;
@@ -53,7 +63,7 @@ MediaPlayer.OnErrorListener, MediaPlayer.OnBufferingUpdateListener {
 		relLayout.setBackgroundColor(Color.BLACK);
 		RelativeLayout.LayoutParams relLayoutParam = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
 		relLayoutParam.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
-		mVideoView = new VideoView(this);
+		mVideoView = new EventfulVideoView(this);
 		mVideoView.setLayoutParams(relLayoutParam);
 		relLayout.addView(mVideoView);
 
@@ -82,6 +92,8 @@ MediaPlayer.OnErrorListener, MediaPlayer.OnBufferingUpdateListener {
 			mVideoView.setOnCompletionListener(this);
 			mVideoView.setOnPreparedListener(this);
 			mVideoView.setOnErrorListener(this);
+			mVideoView.setPlayPauseListener(this);
+			mVideoView.setSeekToListener(this);
 			mVideoView.setVideoURI(videoUri, headers);
 			mMediaController = new MediaController(this);
 			mMediaController.setAnchorView(mVideoView);
@@ -208,5 +220,45 @@ MediaPlayer.OnErrorListener, MediaPlayer.OnBufferingUpdateListener {
 		if (mMediaController != null)
 			mMediaController.show();
 		return false;
+	}
+
+	@Override
+	public void onStreamPlay() {
+		try {
+			JSONObject callbackData = new JSONObject();
+			callbackData.put(CALLBACK_EVENT_TYPE_KEY, CALLBACK_EVENT_TYPE_VALUE_PLAY);
+			sendCallback(callbackData);
+		} catch(Exception e) {
+			Log.e(TAG, "Failed to notify of play event", e);
+		}
+	}
+
+	@Override
+	public void onStreamPause() {
+		try {
+			JSONObject callbackData = new JSONObject();
+			callbackData.put(CALLBACK_EVENT_TYPE_KEY, CALLBACK_EVENT_TYPE_VALUE_PAUSE);
+			sendCallback(callbackData);
+		} catch(Exception e) {
+			Log.e(TAG, "Failed to notify of pause event", e);
+		}
+	}
+
+	@Override
+	public void onStreamSeekTo(int msec) {
+		try {
+			JSONObject callbackData = new JSONObject();
+			callbackData.put(CALLBACK_EVENT_TYPE_KEY, CALLBACK_EVENT_TYPE_VALUE_SEEK);
+			callbackData.put(CALLBACK_SEEK_KEY_MSEC, msec);
+			sendCallback(callbackData);
+		} catch(Exception e) {
+			Log.e(TAG, "Failed to notify of seek event", e);
+		}
+	}
+
+	private void sendCallback(JSONObject callbackData) {
+		PluginResult result = new PluginResult(PluginResult.Status.OK, callbackData);
+		result.setKeepCallback(true);
+		StreamingMedia.callbackContext.sendPluginResult(result);
 	}
 }

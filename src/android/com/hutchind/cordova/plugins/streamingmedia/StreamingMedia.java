@@ -28,14 +28,14 @@ public class StreamingMedia extends CordovaPlugin {
 
 	private static final int ACTIVITY_CODE_PLAY_MEDIA = 7;
 
-	private CallbackContext callbackContext;
+	static CallbackContext callbackContext;
 
 	private static final String TAG = "StreamingMediaPlugin";
 
 
 	@Override
 	public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
-		this.callbackContext = callbackContext;
+		StreamingMedia.callbackContext = callbackContext;
 		JSONObject options = null;
 
 		try {
