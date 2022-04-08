@@ -46,6 +46,7 @@ EventfulVideoView.PlayPauseListener, EventfulVideoView.SeekToListener {
 	private Boolean mShouldAutoClose = true;
 	private boolean mControls;
 	private Map<String, String> headers;
+	private Integer customDuration;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +59,9 @@ EventfulVideoView.PlayPauseListener, EventfulVideoView.SeekToListener {
 		mShouldAutoClose = b.getBoolean("shouldAutoClose", true);
 		mControls = b.getBoolean("controls", true);
 		headers = (Map<String,String>) b.getSerializable(StreamingMedia.INTENT_EXTRA_HEADERS);
+
+		if(b.containsKey("duration"))
+			customDuration = b.getInt("duration");
 
 		RelativeLayout relLayout = new RelativeLayout(this);
 		relLayout.setBackgroundColor(Color.BLACK);
@@ -101,6 +105,7 @@ EventfulVideoView.PlayPauseListener, EventfulVideoView.SeekToListener {
 			if (!mControls) {
 				mMediaController.setVisibility(View.GONE);
 			}
+			mVideoView.setDuration(customDuration);
 			mVideoView.setMediaController(mMediaController);
 		} catch (Throwable t) {
 			Log.d(TAG, t.toString());

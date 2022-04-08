@@ -4,10 +4,14 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.VideoView;
 
+import java.util.Optional;
+
 public class EventfulVideoView extends VideoView {
 
     private PlayPauseListener playPauseListener;
     private SeekToListener seekToListener;
+
+    private Integer customDuration;
 
     public EventfulVideoView(Context context) {
         super(context);
@@ -31,6 +35,15 @@ public class EventfulVideoView extends VideoView {
 
     public void setSeekToListener(SeekToListener listener) {
         seekToListener = listener;
+    }
+
+    @Override
+    public int getDuration() {
+        return Optional.ofNullable(customDuration).orElse(super.getDuration());
+    }
+
+    public void setDuration(Integer duration) {
+        this.customDuration = duration;
     }
 
     @Override
