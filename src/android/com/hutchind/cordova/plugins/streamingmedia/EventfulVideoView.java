@@ -12,6 +12,7 @@ public class EventfulVideoView extends VideoView {
     private SeekToListener seekToListener;
 
     private Integer customDuration;
+    private int offsetPosition;
 
     public EventfulVideoView(Context context) {
         super(context);
@@ -47,6 +48,11 @@ public class EventfulVideoView extends VideoView {
     }
 
     @Override
+    public int getCurrentPosition() {
+        return super.getCurrentPosition() - offsetPosition;
+    }
+
+    @Override
     public void pause() {
         super.pause();
         if (playPauseListener != null) {
@@ -64,7 +70,13 @@ public class EventfulVideoView extends VideoView {
 
     @Override
     public void seekTo(int msec) {
-        super.seekTo(msec);
+        if(msec < super.getDuration()) {
+            super.seekTo(msec);
+            offsetPosition = 0;
+        } else {
+            offsetPosition = super.getCurrentPosition() - msec;
+        }
+
         if(seekToListener != null) {
             seekToListener.onStreamSeekTo(msec);
         }
