@@ -21,6 +21,14 @@ import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.PluginResult;
 
 public class StreamingMedia extends CordovaPlugin {
+
+	public static final String CALLBACK_EVENT_TYPE_KEY = "eventType";
+	public static final String CALLBACK_EVENT_TYPE_VALUE_LIFECYCLE_ONPAUSE = "LIFECYCLE_ONPAUSE";
+	public static final String CALLBACK_EVENT_TYPE_VALUE_LIFECYCLE_ONRESUME = "LIFECYCLE_ONRESUME";
+	public static final String CALLBACK_EVENT_TYPE_VALUE_PLAY = "PLAY";
+	public static final String CALLBACK_EVENT_TYPE_VALUE_PAUSE = "PAUSE";
+	public static final String CALLBACK_EVENT_TYPE_VALUE_SEEK = "SEEK";
+
 	public static final String ACTION_PLAY_AUDIO = "playAudio";
 	public static final String ACTION_PLAY_VIDEO = "playVideo";
 
@@ -120,14 +128,20 @@ public class StreamingMedia extends CordovaPlugin {
 		super.onActivityResult(requestCode, resultCode, intent);
 		if (ACTIVITY_CODE_PLAY_MEDIA == requestCode) {
 			if (Activity.RESULT_OK == resultCode) {
-				this.callbackContext.success();
+				StreamingMedia.callbackContext.success();
 			} else if (Activity.RESULT_CANCELED == resultCode) {
 				String errMsg = "Error";
 				if (intent != null && intent.hasExtra("message")) {
 					errMsg = intent.getStringExtra("message");
 				}
-				this.callbackContext.error(errMsg);
+				StreamingMedia.callbackContext.error(errMsg);
 			}
 		}
+	}
+
+	public static void sendCallback(JSONObject callbackData) {
+		PluginResult result = new PluginResult(PluginResult.Status.OK, callbackData);
+		result.setKeepCallback(true);
+		StreamingMedia.callbackContext.sendPluginResult(result);
 	}
 }

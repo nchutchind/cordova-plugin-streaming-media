@@ -30,11 +30,6 @@ MediaPlayer.OnCompletionListener, MediaPlayer.OnPreparedListener,
 MediaPlayer.OnErrorListener, MediaPlayer.OnBufferingUpdateListener,
 EventfulVideoView.PlayPauseListener, EventfulVideoView.SeekToListener {
 
-	public static final String CALLBACK_EVENT_TYPE_KEY = "eventType";
-	public static final String CALLBACK_EVENT_TYPE_VALUE_PLAY = "PLAY";
-	public static final String CALLBACK_EVENT_TYPE_VALUE_PAUSE = "PAUSE";
-	public static final String CALLBACK_EVENT_TYPE_VALUE_SEEK = "SEEK";
-
 	public static final String CALLBACK_SEEK_KEY_MSEC = "msec";
 
 	private String TAG = getClass().getSimpleName();
@@ -228,11 +223,37 @@ EventfulVideoView.PlayPauseListener, EventfulVideoView.SeekToListener {
 	}
 
 	@Override
+	protected void onPause() {
+		super.onPause();
+
+		try {
+			JSONObject callbackData = new JSONObject();
+			callbackData.put(StreamingMedia.CALLBACK_EVENT_TYPE_KEY, StreamingMedia.CALLBACK_EVENT_TYPE_VALUE_LIFECYCLE_ONPAUSE);
+			StreamingMedia.sendCallback(callbackData);
+		} catch(Exception e) {
+			Log.e(TAG, "Failed to notify of lifecycle pause event", e);
+		}
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+
+		try {
+			JSONObject callbackData = new JSONObject();
+			callbackData.put(StreamingMedia.CALLBACK_EVENT_TYPE_KEY, StreamingMedia.CALLBACK_EVENT_TYPE_VALUE_LIFECYCLE_ONRESUME);
+			StreamingMedia.sendCallback(callbackData);
+		} catch(Exception e) {
+			Log.e(TAG, "Failed to notify of lifecycle resume event", e);
+		}
+	}
+
+	@Override
 	public void onStreamPlay() {
 		try {
 			JSONObject callbackData = new JSONObject();
-			callbackData.put(CALLBACK_EVENT_TYPE_KEY, CALLBACK_EVENT_TYPE_VALUE_PLAY);
-			sendCallback(callbackData);
+			callbackData.put(StreamingMedia.CALLBACK_EVENT_TYPE_KEY, StreamingMedia.CALLBACK_EVENT_TYPE_VALUE_PLAY);
+			StreamingMedia.sendCallback(callbackData);
 		} catch(Exception e) {
 			Log.e(TAG, "Failed to notify of play event", e);
 		}
@@ -242,8 +263,8 @@ EventfulVideoView.PlayPauseListener, EventfulVideoView.SeekToListener {
 	public void onStreamPause() {
 		try {
 			JSONObject callbackData = new JSONObject();
-			callbackData.put(CALLBACK_EVENT_TYPE_KEY, CALLBACK_EVENT_TYPE_VALUE_PAUSE);
-			sendCallback(callbackData);
+			callbackData.put(StreamingMedia.CALLBACK_EVENT_TYPE_KEY, StreamingMedia.CALLBACK_EVENT_TYPE_VALUE_PAUSE);
+			StreamingMedia.sendCallback(callbackData);
 		} catch(Exception e) {
 			Log.e(TAG, "Failed to notify of pause event", e);
 		}
@@ -253,17 +274,12 @@ EventfulVideoView.PlayPauseListener, EventfulVideoView.SeekToListener {
 	public void onStreamSeekTo(int msec) {
 		try {
 			JSONObject callbackData = new JSONObject();
-			callbackData.put(CALLBACK_EVENT_TYPE_KEY, CALLBACK_EVENT_TYPE_VALUE_SEEK);
+			callbackData.put(StreamingMedia.CALLBACK_EVENT_TYPE_KEY, StreamingMedia.CALLBACK_EVENT_TYPE_VALUE_SEEK);
 			callbackData.put(CALLBACK_SEEK_KEY_MSEC, msec);
-			sendCallback(callbackData);
+			StreamingMedia.sendCallback(callbackData);
 		} catch(Exception e) {
 			Log.e(TAG, "Failed to notify of seek event", e);
 		}
 	}
 
-	private void sendCallback(JSONObject callbackData) {
-		PluginResult result = new PluginResult(PluginResult.Status.OK, callbackData);
-		result.setKeepCallback(true);
-		StreamingMedia.callbackContext.sendPluginResult(result);
-	}
 }
