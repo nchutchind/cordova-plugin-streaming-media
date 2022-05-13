@@ -1,14 +1,11 @@
 package com.hutchind.cordova.plugins.streamingmedia;
 
 import android.app.Activity;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
-import android.content.ContentResolver;
 import android.content.Intent;
-import android.os.Build;
+
 import java.util.Iterator;
-import java.util.Properties;
 import java.util.Map;
 import java.util.HashMap;
 import java.io.Serializable;
@@ -31,6 +28,7 @@ public class StreamingMedia extends CordovaPlugin {
 
 	public static final String ACTION_PLAY_AUDIO = "playAudio";
 	public static final String ACTION_PLAY_VIDEO = "playVideo";
+	public static final String ACTION_STOP_VIDEO = "stopVideo";
 
 	public static final String INTENT_EXTRA_HEADERS = "headers";
 
@@ -56,7 +54,9 @@ public class StreamingMedia extends CordovaPlugin {
 			return playAudio(args.getString(0), options);
 		} else if (ACTION_PLAY_VIDEO.equals(action)) {
 			return playVideo(args.getString(0), options);
-		} else {
+		} else if (ACTION_STOP_VIDEO.equals(action)) {
+      		return stopVideo();
+    	} else {
 			callbackContext.error("streamingMedia." + action + " is not a supported method.");
 			return false;
 		}
@@ -67,6 +67,11 @@ public class StreamingMedia extends CordovaPlugin {
 	}
 	private boolean playVideo(String url, JSONObject options) {
 		return play(SimpleVideoStream.class, url, options);
+	}
+	private boolean stopVideo() {
+    	Intent intent = new Intent(SimpleVideoStream.BROADCAST_INTENT_ACTION_STOP);
+    	cordova.getActivity().sendBroadcast(intent);
+    	return true;
 	}
 
 	private boolean play(final Class activityClass, final String url, final JSONObject options) {

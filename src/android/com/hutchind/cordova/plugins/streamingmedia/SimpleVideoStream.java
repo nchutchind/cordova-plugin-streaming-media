@@ -1,6 +1,9 @@
 package com.hutchind.cordova.plugins.streamingmedia;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.media.MediaPlayer;
@@ -19,16 +22,14 @@ import android.widget.RelativeLayout;
 
 import java.util.Map;
 
-import org.json.JSONException;
 import org.json.JSONObject;
-
-import org.apache.cordova.PluginResult;
-import org.apache.cordova.CallbackContext;
 
 public class SimpleVideoStream extends Activity implements
 MediaPlayer.OnCompletionListener, MediaPlayer.OnPreparedListener,
 MediaPlayer.OnErrorListener, MediaPlayer.OnBufferingUpdateListener,
 EventfulVideoView.PlayPauseListener, EventfulVideoView.SeekToListener {
+
+	public static final String BROADCAST_INTENT_ACTION_STOP = "stop_video_stream";
 
 	public static final String CALLBACK_SEEK_KEY_MSEC = "msec";
 
@@ -48,6 +49,16 @@ EventfulVideoView.PlayPauseListener, EventfulVideoView.SeekToListener {
 		super.onCreate(savedInstanceState);
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+		BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context arg0, Intent intent) {
+			if (intent.getAction().equals(BROADCAST_INTENT_ACTION_STOP)) {
+			finish();
+			}
+		}
+		};
+		registerReceiver(broadcastReceiver, new IntentFilter(BROADCAST_INTENT_ACTION_STOP));
 
 		Bundle b = getIntent().getExtras();
 		mVideoUrl = b.getString("mediaUrl");
