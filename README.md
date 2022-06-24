@@ -1,6 +1,8 @@
 # Cordova Streaming Media plugin
 
 For iOS and Android, by [Nicholas Hutchind](https://github.com/nchutchind)
+Custom Headers Support for Android by [Alborrajo](https://github.com/alborrajo)
+Custom Headers Support for iOS by [Manuel Marín García](https://github.com/PhantomPainX)
 
 ## Description
 
@@ -47,6 +49,9 @@ cordova plugin add https://github.com/nchutchind/cordova-plugin-streaming-media
     orientation: 'landscape',
     shouldAutoClose: true,  // true(default)/false
     controls: true // true(default)/false. Used to hide controls on fullscreen
+    headers: {
+      header_key: "header_value"
+    }
   };
   window.plugins.streamingMedia.playVideo(videoUrl, options);
 
