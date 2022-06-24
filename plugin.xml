@@ -69,6 +69,7 @@
 		<source-file src="src/android/com/hutchind/cordova/plugins/streamingmedia/SimpleVideoStream.java" target-dir="src/com/hutchind/cordova/plugins/streamingmedia" />
 		<source-file src="src/android/com/hutchind/cordova/plugins/streamingmedia/StreamingMedia.java" target-dir="src/com/hutchind/cordova/plugins/streamingmedia" />
 		<source-file src="src/android/com/hutchind/cordova/plugins/streamingmedia/ImageLoadTask.java" target-dir="src/com/hutchind/cordova/plugins/streamingmedia" />
+		<source-file src="src/android/com/hutchind/cordova/plugins/streamingmedia/EventfulVideoView.java" target-dir="src/com/hutchind/cordova/plugins/streamingmedia" />
 	</platform>
 
 	<platform name="amazon-fireos">

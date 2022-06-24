@@ -27,6 +27,7 @@
     NSString *videoType;
     AVPlayer *movie;
     BOOL controls;
+    NSMutableDictionary *headers;
 }
 
 NSString * const TYPE_VIDEO = @"VIDEO";
@@ -58,6 +59,12 @@ NSString * const DEFAULT_IMAGE_SCALE = @"center";
         controls = [[options objectForKey:@"controls"] boolValue];
     } else {
         controls = YES;
+    }
+
+    if (![options isKindOfClass:[NSNull class]] && [options objectForKey:@"headers"]) {
+        headers = [options objectForKey:@"headers"];
+    } else {
+        headers = nil;
     }
     
     if ([type isEqualToString:TYPE_AUDIO]) {
@@ -211,17 +218,36 @@ NSString * const DEFAULT_IMAGE_SCALE = @"center";
 -(void)startPlayer:(NSString*)uri {
     NSLog(@"startplayer called");
     NSURL *url             =  [NSURL URLWithString:uri];
-    movie                  =  [AVPlayer playerWithURL:url];
-    
-    // handle orientation
-    [self handleOrientation];
-    
-    // handle gestures
-    [self handleGestures];
-    
-    [moviePlayer setPlayer:movie];
-    [moviePlayer setShowsPlaybackControls:controls];
-    [moviePlayer setUpdatesNowPlayingInfoCenter:YES];
+    if (headers != nil) {
+        NSMutableDictionary* headerss = [NSMutableDictionary dictionary];
+        for (NSString *key in headers) {
+            [headerss setObject:[headers objectForKey:key] forKey:key];
+        }
+        AVURLAsset* asset = [AVURLAsset URLAssetWithURL:url options:@{@"AVURLAssetHTTPHeaderFieldsKey" : headerss}];
+        AVPlayerItem* item = [AVPlayerItem playerItemWithAsset:asset];
+        movie = [AVPlayer playerWithPlayerItem:item];
+
+        // handle orientation
+        [self handleOrientation];
+        
+        // handle gestures
+        [self handleGestures];
+
+        [moviePlayer setPlayer:movie];
+        [moviePlayer setShowsPlaybackControls:controls];
+        [moviePlayer setUpdatesNowPlayingInfoCenter:YES];
+    } else {
+        movie =  [AVPlayer playerWithURL:url];
+        // handle orientation
+        [self handleOrientation];
+        
+        // handle gestures
+        [self handleGestures];
+        
+        [moviePlayer setPlayer:movie];
+        [moviePlayer setShowsPlaybackControls:controls];
+        [moviePlayer setUpdatesNowPlayingInfoCenter:YES];
+    }
     
     if(@available(iOS 11.0, *)) { [moviePlayer setEntersFullScreenWhenPlaybackBegins:YES]; }
     
