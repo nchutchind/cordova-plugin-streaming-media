@@ -1,9 +1,11 @@
 package com.hutchind.cordova.plugins.streamingmedia;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.graphics.Color;
-import android.graphics.Point;
 import android.media.MediaPlayer;
 import android.widget.MediaController;
 import android.content.Intent;
@@ -12,26 +14,35 @@ import android.view.MotionEvent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Display;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.MediaController;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.VideoView;
+
+import java.util.Map;
+
+import org.json.JSONObject;
 
 public class SimpleVideoStream extends Activity implements
 MediaPlayer.OnCompletionListener, MediaPlayer.OnPreparedListener,
-MediaPlayer.OnErrorListener, MediaPlayer.OnBufferingUpdateListener {
+MediaPlayer.OnErrorListener, MediaPlayer.OnBufferingUpdateListener,
+EventfulVideoView.PlayPauseListener, EventfulVideoView.SeekToListener {
+
+	public static final String BROADCAST_INTENT_ACTION_STOP = "stop_video_stream";
+
+	public static final String CALLBACK_SEEK_KEY_MSEC = "msec";
+
 	private String TAG = getClass().getSimpleName();
-	private VideoView mVideoView = null;
+	private EventfulVideoView mVideoView = null;
 	private MediaPlayer mMediaPlayer = null;
 	private MediaController mMediaController = null;
 	private ProgressBar mProgressBar = null;
 	private String mVideoUrl;
 	private Boolean mShouldAutoClose = true;
 	private boolean mControls;
+	private Map<String, String> headers;
+	private Integer customDuration;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -39,16 +50,30 @@ MediaPlayer.OnErrorListener, MediaPlayer.OnBufferingUpdateListener {
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
+		BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context arg0, Intent intent) {
+			if (intent.getAction().equals(BROADCAST_INTENT_ACTION_STOP)) {
+			finish();
+			}
+		}
+		};
+		registerReceiver(broadcastReceiver, new IntentFilter(BROADCAST_INTENT_ACTION_STOP));
+
 		Bundle b = getIntent().getExtras();
 		mVideoUrl = b.getString("mediaUrl");
 		mShouldAutoClose = b.getBoolean("shouldAutoClose", true);
 		mControls = b.getBoolean("controls", true);
+		headers = (Map<String,String>) b.getSerializable(StreamingMedia.INTENT_EXTRA_HEADERS);
+
+		if(b.containsKey("duration"))
+			customDuration = b.getInt("duration");
 
 		RelativeLayout relLayout = new RelativeLayout(this);
 		relLayout.setBackgroundColor(Color.BLACK);
 		RelativeLayout.LayoutParams relLayoutParam = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
 		relLayoutParam.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
-		mVideoView = new VideoView(this);
+		mVideoView = new EventfulVideoView(this);
 		mVideoView.setLayoutParams(relLayoutParam);
 		relLayout.addView(mVideoView);
 
@@ -77,13 +102,16 @@ MediaPlayer.OnErrorListener, MediaPlayer.OnBufferingUpdateListener {
 			mVideoView.setOnCompletionListener(this);
 			mVideoView.setOnPreparedListener(this);
 			mVideoView.setOnErrorListener(this);
-			mVideoView.setVideoURI(videoUri);
+			mVideoView.setPlayPauseListener(this);
+			mVideoView.setSeekToListener(this);
+			mVideoView.setVideoURI(videoUri, headers);
 			mMediaController = new MediaController(this);
 			mMediaController.setAnchorView(mVideoView);
 			mMediaController.setMediaPlayer(mVideoView);
 			if (!mControls) {
 				mMediaController.setVisibility(View.GONE);
 			}
+			mVideoView.setDuration(customDuration);
 			mVideoView.setMediaController(mMediaController);
 		} catch (Throwable t) {
 			Log.d(TAG, t.toString());
@@ -204,4 +232,65 @@ MediaPlayer.OnErrorListener, MediaPlayer.OnBufferingUpdateListener {
 			mMediaController.show();
 		return false;
 	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+
+		try {
+			JSONObject callbackData = new JSONObject();
+			callbackData.put(StreamingMedia.CALLBACK_EVENT_TYPE_KEY, StreamingMedia.CALLBACK_EVENT_TYPE_VALUE_LIFECYCLE_ONPAUSE);
+			StreamingMedia.sendCallback(callbackData);
+		} catch(Exception e) {
+			Log.e(TAG, "Failed to notify of lifecycle pause event", e);
+		}
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+
+		try {
+			JSONObject callbackData = new JSONObject();
+			callbackData.put(StreamingMedia.CALLBACK_EVENT_TYPE_KEY, StreamingMedia.CALLBACK_EVENT_TYPE_VALUE_LIFECYCLE_ONRESUME);
+			StreamingMedia.sendCallback(callbackData);
+		} catch(Exception e) {
+			Log.e(TAG, "Failed to notify of lifecycle resume event", e);
+		}
+	}
+
+	@Override
+	public void onStreamPlay() {
+		try {
+			JSONObject callbackData = new JSONObject();
+			callbackData.put(StreamingMedia.CALLBACK_EVENT_TYPE_KEY, StreamingMedia.CALLBACK_EVENT_TYPE_VALUE_PLAY);
+			StreamingMedia.sendCallback(callbackData);
+		} catch(Exception e) {
+			Log.e(TAG, "Failed to notify of play event", e);
+		}
+	}
+
+	@Override
+	public void onStreamPause() {
+		try {
+			JSONObject callbackData = new JSONObject();
+			callbackData.put(StreamingMedia.CALLBACK_EVENT_TYPE_KEY, StreamingMedia.CALLBACK_EVENT_TYPE_VALUE_PAUSE);
+			StreamingMedia.sendCallback(callbackData);
+		} catch(Exception e) {
+			Log.e(TAG, "Failed to notify of pause event", e);
+		}
+	}
+
+	@Override
+	public void onStreamSeekTo(int msec) {
+		try {
+			JSONObject callbackData = new JSONObject();
+			callbackData.put(StreamingMedia.CALLBACK_EVENT_TYPE_KEY, StreamingMedia.CALLBACK_EVENT_TYPE_VALUE_SEEK);
+			callbackData.put(CALLBACK_SEEK_KEY_MSEC, msec);
+			StreamingMedia.sendCallback(callbackData);
+		} catch(Exception e) {
+			Log.e(TAG, "Failed to notify of seek event", e);
+		}
+	}
+
 }
